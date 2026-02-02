@@ -51,6 +51,45 @@ Instead of a single query, make **7 sequential targeted WorkIQ calls** to gather
 - If a query fails, retry once, then continue to next query
 - Do NOT let one failure stop remaining queries
 
+**Execution Pattern (Message-by-Message Flow):**
+
+```
+YOUR MESSAGE 1:
+"🔍 Phase 1: Information Gathering (UltraThink Mode - Sequential Queries)
+Note: Executing queries ONE AT A TIME to prevent failures
+
+→ Query 1/7: Searching emails..."
+[Make ONE WorkIQ tool call for emails]
+
+[WAIT FOR SYSTEM RESPONSE]
+
+YOUR MESSAGE 2:
+"✓ Found X emails (retrieved full content)
+📊 Brief analysis: [2-3 sentences about what you found]
+
+→ Query 2/7: Searching meetings..."
+[Make ONE WorkIQ tool call for meetings]
+
+[WAIT FOR SYSTEM RESPONSE]
+
+YOUR MESSAGE 3:
+"✓ Found X meetings (retrieved complete notes)
+📊 Brief analysis: [2-3 sentences about what you found]
+
+→ Query 3/7: Searching specification documents..."
+[Make ONE WorkIQ tool call for documents]
+
+[Continue this pattern for all 7 queries]
+```
+
+**DO NOT do this (parallel calls):**
+```
+❌ WRONG - Don't make multiple tool calls in one message:
+[WorkIQ tool call for emails]
+[WorkIQ tool call for meetings]  ← This will cause cascading failures
+[WorkIQ tool call for documents]
+```
+
 **Query Sequence (execute one query per message):**
 
 1. **Query 1: Emails about the topic**
@@ -146,6 +185,12 @@ After gathering all artifacts, **think deeply** about the complete dataset:
 - What are the open questions? (explicitly mentioned across sources)
 - What customer evidence exists? (names, incident numbers, dates)
 - What is the timeline and project plan? (committed dates, not hopes)
+
+**CHECKPOINT: Before proceeding to Phase 2**
+- Ensure ALL 7 queries have been attempted (even if some failed)
+- Complete the UltraThink deep analysis phase
+- Display summary: "🧠 UltraThink: Deep analysis across X total artifacts..."
+- ONLY THEN proceed to Phase 2 - do NOT move to Phase 2 while still gathering data
 
 ### Phase 2: Read Formatting Guidelines
 
