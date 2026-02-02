@@ -22,13 +22,13 @@
 
 ### Quick Install
 
-```bash
+```powershell
 # Clone the repository
 git clone https://github.com/srbhagrwl/claude-generate-spec-skill.git
 
 # Copy to Claude skills directory (Windows)
 cd claude-generate-spec-skill
-xcopy /E /I /Y . "%USERPROFILE%\.claude\skills\generate-spec\"
+robocopy . "$env:USERPROFILE\.claude\skills\generate-spec" /E /XD .git .claude releases /XF .gitignore
 ```
 
 ### Manual Install
