@@ -127,7 +127,7 @@ Created by Saurabh Agarwal (sauagarwal@microsoft.com)
 
 ## Version
 
-1.7.0
+1.8.0
 
 ## License
 

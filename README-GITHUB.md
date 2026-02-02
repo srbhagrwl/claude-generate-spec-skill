@@ -4,14 +4,14 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
 
 | Feature | Description |
 |---------|-------------|
-| 🤖 **Automatic Information Gathering** | Queries WorkIQ for emails, meetings, documents, Teams conversations |
+| 🤖 **Automatic Information Gathering** | 7 targeted WorkIQ queries for emails, meetings, documents, Teams, incidents, projects + UltraThink analysis |
 | 📝 **Professional Formatting** | Microsoft-standard specs with tables, diagrams, and proper structure |
 | 📄 **Word Document Generation** | Converts to beautifully formatted .docx files with professional diagrams |
 | 🔄 **Template Fallback Mode** | Creates structured templates when WorkIQ unavailable |
@@ -294,6 +294,7 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.8.0** (2026-02-02) - UltraThink mode: 7 targeted WorkIQ queries with complete artifact retrieval and deep cross-source analysis
 - **v1.7.0** (2026-02-02) - Enhanced Word conversion with configurable colors, hyperlinks fix, images/blockquotes support
 - **v1.6.0** (2026-02-02) - Removed improve-diagrams.ps1, simplified workflow
 - **v1.5.0** (2026-02-02) - Added comprehensive skill.md documentation file

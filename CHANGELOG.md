@@ -5,6 +5,32 @@ All notable changes to the Generate-Spec skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-02-02
+
+### Changed - UltraThink Mode
+- **Revolutionary Information Gathering**: Replaced single WorkIQ query with 7 sequential targeted queries
+- **Complete Artifact Retrieval**: Now fetches full document content, entire emails, complete meeting notes instead of summaries
+- **Deep Analysis Phase**: Added UltraThink phase that cross-references all sources, identifies contradictions, validates assumptions
+- **Per-Query Retry Logic**: Each of the 7 queries now has individual retry capability for better reliability
+- **Enhanced Console Output**: Progress now shows "Query N/7" with specific query types and artifact counts
+
+### Added
+- **Query 1**: Emails - retrieves full email threads with complete content
+- **Query 2**: Meetings - retrieves complete meeting transcripts and notes
+- **Query 3**: Specification documents - fetches full document content
+- **Query 4**: Teams conversations - retrieves complete conversation threads
+- **Query 5**: Customer incidents - fetches full incident details with customer names
+- **Query 6**: Project plans - retrieves complete work item details with dependencies
+- **Query 7**: Related artifacts - catch-all for presentations, diagrams, spreadsheets
+- **UltraThink Analysis**: Cross-references all sources, identifies patterns, validates constraints
+
+### Benefits
+- **Comprehensive Data Collection**: 7x more thorough than single query approach
+- **Better Context**: Full artifacts provide complete context vs. incomplete summaries
+- **Higher Quality Specs**: Deep analysis produces more accurate, evidence-based specifications
+- **Intelligent Fallback**: Continues with available data even if some queries fail
+- **Better Traceability**: Can reference specific emails, meetings, documents with full context
+
 ## [1.7.0] - 2026-02-02
 
 ### Added
