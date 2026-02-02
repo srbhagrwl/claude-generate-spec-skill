@@ -35,22 +35,6 @@ $doc.PageSetup.BottomMargin = 72
 $doc.PageSetup.LeftMargin = 72
 $doc.PageSetup.RightMargin = 72
 
-# Function to reset formatting to default
-function Reset-Formatting {
-    param($sel)
-    $sel.Style = "Normal"
-    $sel.Font.Name = "Calibri"
-    $sel.Font.Size = 11
-    $sel.Font.Bold = $false
-    $sel.Font.Italic = $false
-    $sel.Font.Color = 0  # Black
-    $sel.ParagraphFormat.LeftIndent = 0
-    $sel.ParagraphFormat.RightIndent = 0
-    $sel.ParagraphFormat.SpaceBefore = 0
-    $sel.ParagraphFormat.SpaceAfter = 0
-    $sel.ParagraphFormat.Shading.BackgroundPatternColor = 16777215  # White
-}
-
 # Function to check if text contains diagram characters
 function Test-IsDiagram {
     param($text)
@@ -82,70 +66,16 @@ function Add-DiagramBox {
     $sel.Borders.OutsideColor = 49407  # Microsoft blue
     $sel.Borders.OutsideLineWidth = 2
 
-    # Move to end and reset
+    # Move to end
     $sel.Collapse(0)
-    Reset-Formatting -sel $sel
     $sel.TypeParagraph()
-}
 
-# Function to handle inline formatting (bold, italic, code)
-function Add-FormattedText {
-    param($text, $sel)
-
-    $currentText = $text
-    $position = 0
-
-    while ($position -lt $currentText.Length) {
-        # Check for inline code (backticks)
-        if ($currentText[$position] -eq '`') {
-            $endPos = $currentText.IndexOf('`', $position + 1)
-            if ($endPos -gt $position) {
-                # Type the code text
-                $codeText = $currentText.Substring($position + 1, $endPos - $position - 1)
-                $sel.Font.Name = "Consolas"
-                $sel.Font.Size = 10
-                $sel.Font.Color = 8388608  # Dark red
-                $sel.TypeText($codeText)
-                $sel.Font.Name = "Calibri"
-                $sel.Font.Size = 11
-                $sel.Font.Color = 0
-                $position = $endPos + 1
-                continue
-            }
-        }
-
-        # Check for bold text (**)
-        if ($position -lt $currentText.Length - 1 -and $currentText.Substring($position, 2) -eq '**') {
-            $endPos = $currentText.IndexOf('**', $position + 2)
-            if ($endPos -gt $position) {
-                # Type the bold text
-                $boldText = $currentText.Substring($position + 2, $endPos - $position - 2)
-                $sel.Font.Bold = $true
-                $sel.TypeText($boldText)
-                $sel.Font.Bold = $false
-                $position = $endPos + 2
-                continue
-            }
-        }
-
-        # Check for italic text (*)
-        if ($currentText[$position] -eq '*' -and ($position -eq 0 -or $currentText[$position - 1] -ne '*')) {
-            $endPos = $currentText.IndexOf('*', $position + 1)
-            if ($endPos -gt $position -and ($endPos -eq $currentText.Length - 1 -or $currentText[$endPos + 1] -ne '*')) {
-                # Type the italic text
-                $italicText = $currentText.Substring($position + 1, $endPos - $position - 1)
-                $sel.Font.Italic = $true
-                $sel.TypeText($italicText)
-                $sel.Font.Italic = $false
-                $position = $endPos + 1
-                continue
-            }
-        }
-
-        # Regular character
-        $sel.TypeText($currentText[$position])
-        $position++
-    }
+    # Reset formatting
+    $sel.Font.Name = "Calibri"
+    $sel.Font.Size = 11
+    $sel.ParagraphFormat.LeftIndent = 0
+    $sel.ParagraphFormat.RightIndent = 0
+    $sel.ParagraphFormat.Shading.BackgroundPatternColor = 16777215
 }
 
 # Parse and format the markdown
@@ -157,13 +87,12 @@ $codeLines = @()
 
 $totalLines = $lines.Count
 $currentLine = 0
-$previousWasEmpty = $false
 
 for ($i = 0; $i -lt $lines.Count; $i++) {
     $line = $lines[$i].TrimEnd()
     $currentLine++
 
-    if ($currentLine % 50 -eq 0) {
+    if ($currentLine % 100 -eq 0) {
         $percent = [math]::Round(($currentLine / $totalLines) * 100)
         Write-Progress -Activity "Converting to Word" -Status "$percent% Complete" -PercentComplete $percent
     }
@@ -174,7 +103,6 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
             if ($codeLines.Count -gt 0 -and (Test-IsDiagram ($codeLines -join "`n"))) {
                 Add-DiagramBox -lines $codeLines -sel $selection -document $doc
             } else {
-                Reset-Formatting -sel $selection
                 $selection.Font.Name = "Consolas"
                 $selection.Font.Size = 9
                 $selection.ParagraphFormat.LeftIndent = 36
@@ -183,12 +111,13 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
                     $selection.TypeText($codeLine)
                     $selection.TypeParagraph()
                 }
-                Reset-Formatting -sel $selection
-                $selection.TypeParagraph()
+                $selection.Font.Name = "Calibri"
+                $selection.Font.Size = 11
+                $selection.ParagraphFormat.LeftIndent = 0
+                $selection.ParagraphFormat.Shading.BackgroundPatternColor = 16777215
             }
             $inCodeBlock = $false
             $codeLines = @()
-            $previousWasEmpty = $false
         } else {
             $inCodeBlock = $true
             $codeLines = @()
@@ -201,65 +130,35 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
         continue
     }
 
-    # Handle horizontal rules
-    if ($line -match '^[-*_]{3,}$') {
-        $selection.Borders.Enable = $true
-        $selection.Borders.DistanceFromBottom = 0
-        $selection.TypeParagraph()
-        $selection.Borders.Enable = $false
-        $previousWasEmpty = $false
-        continue
-    }
-
     # Handle headings
     if ($line -match '^# (.+)$') {
-        Reset-Formatting -sel $selection
         $selection.Style = "Title"
         $selection.Font.Size = 26
         $selection.Font.Bold = $true
-        $selection.Font.Color = 49407  # Microsoft blue
-        $selection.ParagraphFormat.SpaceAfter = 12
+        $selection.Font.Color = 49407
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
+        $selection.TypeParagraph()
     }
     elseif ($line -match '^## (.+)$') {
-        Reset-Formatting -sel $selection
         $selection.Style = "Heading 1"
         $selection.Font.Size = 16
-        $selection.Font.Bold = $true
         $selection.Font.Color = 49407
-        $selection.ParagraphFormat.SpaceBefore = 12
-        $selection.ParagraphFormat.SpaceAfter = 6
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
     elseif ($line -match '^### (.+)$') {
-        Reset-Formatting -sel $selection
         $selection.Style = "Heading 2"
         $selection.Font.Size = 13
-        $selection.Font.Bold = $true
-        $selection.ParagraphFormat.SpaceBefore = 10
-        $selection.ParagraphFormat.SpaceAfter = 4
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
     elseif ($line -match '^#### (.+)$') {
-        Reset-Formatting -sel $selection
         $selection.Style = "Heading 3"
         $selection.Font.Size = 11
         $selection.Font.Bold = $true
-        $selection.ParagraphFormat.SpaceBefore = 8
-        $selection.ParagraphFormat.SpaceAfter = 4
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
     # Handle tables
     elseif ($line -match '^\|') {
@@ -268,13 +167,10 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
             $tableData = @()
         }
         $tableData += $line
-        $previousWasEmpty = $false
-        continue
     }
     elseif ($inTable -and $line -notmatch '^\|') {
         $inTable = $false
 
-        # Filter out separator rows
         $rows = $tableData | Where-Object { $_ -notmatch '^\|[-\s|:]+\|$' }
         if ($rows.Count -gt 0) {
             $firstRow = $rows[0] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
@@ -285,17 +181,14 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
             $table = $doc.Tables.Add($range, $numRows, $numCols)
             $table.Borders.Enable = $true
             $table.Style = "Grid Table 4 - Accent 1"
-            $table.AutoFitBehavior(2)  # AutoFit to contents
+            $table.AutoFitBehavior(2)
 
             for ($r = 0; $r -lt $rows.Count; $r++) {
                 $cells = $rows[$r] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
                 for ($c = 0; $c -lt [Math]::Min($cells.Count, $numCols); $c++) {
-                    # Remove markdown formatting from cell text
-                    $cellText = $cells[$c] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1' -replace '\*(.+?)\*', '$1'
+                    $cellText = $cells[$c] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
                     $table.Cell($r + 1, $c + 1).Range.Text = $cellText
-                    $table.Cell($r + 1, $c + 1).Range.Font.Size = 10
 
-                    # Format header row
                     if ($r -eq 0) {
                         $table.Cell($r + 1, $c + 1).Range.Font.Bold = $true
                         $table.Cell($r + 1, $c + 1).Shading.BackgroundPatternColor = 14083324
@@ -303,90 +196,92 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
                 }
             }
 
-            $selection.EndKey(6)  # Move to end of document
+            $selection.EndKey(6)
             $selection.TypeParagraph()
         }
         $tableData = @()
 
-        # Re-process current line if it's not empty
         if ($line.Trim() -ne '') {
             $i--
         }
-        $previousWasEmpty = $false
-        continue
     }
     # Handle bullet lists
-    elseif ($line -match '^[\s]*- (.+)$') {
-        Reset-Formatting -sel $selection
-        $selection.Range.ListFormat.ApplyBulletDefault()
-        Add-FormattedText -text $matches[1] -sel $selection
+    elseif ($line -match '^- (.+)$') {
+        $selection.Style = "List Bullet"
+        $text = $matches[1] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
+        $selection.TypeText($text)
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
     # Handle numbered lists
-    elseif ($line -match '^[\s]*\d+\. (.+)$') {
-        Reset-Formatting -sel $selection
-        $selection.Range.ListFormat.ApplyNumberDefault()
-        Add-FormattedText -text $matches[1] -sel $selection
+    elseif ($line -match '^\d+\. (.+)$') {
+        $selection.Style = "List Number"
+        $text = $matches[1] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
+        $selection.TypeText($text)
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
     # Handle links
     elseif ($line -match '\[.+?\]\(.+?\)') {
-        Reset-Formatting -sel $selection
-        $currentText = $line
+        $selection.Style = "Normal"
+        $currentLine = $line
 
-        while ($currentText -match '\[(.+?)\]\((.+?)\)') {
-            $beforeLink = $currentText.Substring(0, $matches.Index)
-            if ($beforeLink) {
-                Add-FormattedText -text $beforeLink -sel $selection
-            }
+        while ($currentLine -match '\[(.+?)\]\((.+?)\)') {
+            $beforeLink = $currentLine.Substring(0, $currentLine.IndexOf('['))
+            if ($beforeLink) { $selection.TypeText($beforeLink) }
 
             $linkText = $matches[1]
             $linkUrl = $matches[2]
 
-            $doc.Hyperlinks.Add($selection.Range, $linkUrl, $null, $null, $linkText) | Out-Null
-            $selection.Collapse(0)  # Move to end
+            $hyperlink = $doc.Hyperlinks.Add($selection.Range, $linkUrl, $null, $null, $linkText)
 
-            $currentText = $currentText.Substring($matches.Index + $matches[0].Length)
+            $currentLine = $currentLine.Substring($currentLine.IndexOf(')') + 1)
         }
 
-        if ($currentText) {
-            Add-FormattedText -text $currentText -sel $selection
+        if ($currentLine) { $selection.TypeText($currentLine) }
+        $selection.TypeParagraph()
+    }
+    # Handle bold text
+    elseif ($line -match '\*\*') {
+        $selection.Style = "Normal"
+        $parts = $line -split '\*\*'
+        for ($p = 0; $p -lt $parts.Count; $p++) {
+            if ($p % 2 -eq 1) {
+                $selection.Font.Bold = $true
+                $selection.TypeText($parts[$p])
+                $selection.Font.Bold = $false
+            } else {
+                $selection.TypeText($parts[$p])
+            }
         }
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
-        continue
     }
-    # Handle blockquotes
-    elseif ($line -match '^> (.+)$') {
-        Reset-Formatting -sel $selection
-        $selection.ParagraphFormat.LeftIndent = 36
-        $selection.ParagraphFormat.Shading.BackgroundPatternColor = 15790320  # Light gray
-        $selection.Font.Italic = $true
-        Add-FormattedText -text $matches[1] -sel $selection
+    # Handle inline code
+    elseif ($line -match '`') {
+        $selection.Style = "Normal"
+        $parts = $line -split '`'
+        for ($p = 0; $p -lt $parts.Count; $p++) {
+            if ($p % 2 -eq 1) {
+                $selection.Font.Name = "Consolas"
+                $selection.Font.Size = 10
+                $selection.TypeText($parts[$p])
+                $selection.Font.Name = "Calibri"
+                $selection.Font.Size = 11
+            } else {
+                $selection.TypeText($parts[$p])
+            }
+        }
         $selection.TypeParagraph()
-        Reset-Formatting -sel $selection
-        $previousWasEmpty = $false
-        continue
     }
-    # Handle empty lines (add proper spacing)
+    # Handle empty lines
     elseif ($line.Trim() -eq '') {
-        if (-not $previousWasEmpty) {
-            Reset-Formatting -sel $selection
-            $selection.TypeParagraph()
-            $previousWasEmpty = $true
+        if ($selection.Style -ne "Normal") {
+            $selection.Style = "Normal"
         }
-        continue
     }
-    # Normal text with inline formatting
+    # Normal text
     else {
-        Reset-Formatting -sel $selection
-        Add-FormattedText -text $line -sel $selection
+        $selection.Style = "Normal"
+        $selection.TypeText($line)
         $selection.TypeParagraph()
-        $previousWasEmpty = $false
     }
 }
 
