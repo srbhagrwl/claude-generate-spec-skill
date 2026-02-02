@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -267,6 +267,7 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.5.0** (2026-02-02) - Added comprehensive skill.md documentation file
 - **v1.4.0** (2026-02-02) - Template fallback mode for WorkIQ unavailability
 - **v1.3.0** (2026-02-02) - Current directory output for file control
 - **v1.2.0** (2026-02-02) - Renamed to FORMATTING-GUIDELINES.md for clarity
