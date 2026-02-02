@@ -5,6 +5,34 @@ All notable changes to the Generate-Spec skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-02-02
+
+### Removed
+- **improve-diagrams.ps1**: Removed script from workflow as it degraded document quality
+- Diagram improvement phase from instructions
+- improve-diagrams.ps1 references from all documentation
+
+### Changed
+- Simplified workflow: Markdown → Word (no diagram post-processing)
+- convert-to-word.ps1 now solely responsible for diagram formatting
+- Updated messaging from "improved diagrams" to "formatted diagrams"
+- Documentation cleanup across README.md, skill.md, QUICKSTART.md
+
+### Benefits
+- Better document quality with simpler workflow
+- ASCII diagrams preserved in professional bordered boxes via convert-to-word.ps1
+- Reduced complexity and maintenance burden
+- More reliable output without additional processing step
+
+## [1.5.0] - 2026-02-02
+
+### Added
+- **skill.md**: Comprehensive skill documentation file
+
+### Benefits
+- Better discoverability for users
+- Complete usage documentation in one place
+
 ## [1.4.0] - 2026-02-02
 
 ### Added
@@ -110,8 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - skill.json - Skill metadata
   - instructions.md - Claude instructions
 - PowerShell automation scripts
-  - convert-to-word.ps1 - Markdown to Word converter
-  - improve-diagrams.ps1 - Diagram enhancement
+  - convert-to-word.ps1 - Markdown to Word converter with diagram formatting
 
 ### Features
 - Saves 8-12 hours of manual work per specification

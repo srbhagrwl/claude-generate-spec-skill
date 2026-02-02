@@ -116,21 +116,11 @@ After generating the markdown specification:
    - Proper heading hierarchy (Title, H1, H2, H3)
    - Professional table formatting (Grid Table 4 - Accent 1)
    - Code blocks with Consolas font and gray background
+   - ASCII diagrams preserved in bordered boxes (via Add-DiagramBox function)
    - Hyperlinks properly formatted
    - Page setup (1-inch margins)
 
-3. **Improve diagrams** by converting ASCII/text diagrams to:
-   - **Flowcharts** - Vertical tables with bordered boxes and arrows
-   - **Component diagrams** - Grid layouts with color-coded sections
-   - **Professional styling**:
-     - Light blue backgrounds for primary components
-     - Light orange/yellow for dependencies
-     - Microsoft blue borders
-     - Clear typography (Calibri 10-11pt, Consolas for code)
-     - Down arrows (↓) for flow
-     - Proper spacing and alignment
-
-4. **Save Word document** to the current working directory: `./{Topic} - Specification.docx`
+3. **Save Word document** to the current working directory: `./{Topic} - Specification.docx`
 
 ### Phase 5: Summary and Next Steps
 
@@ -162,7 +152,7 @@ Provide the user with:
 
 📄 Phase 3: Word Conversion
    ✓ Converted to Word format
-   ✓ Improved X diagrams
+   ✓ Preserved X diagrams in formatted boxes
    ✓ Saved Word document: ./{Topic} - Specification.docx
 
 ✅ Specification Complete!

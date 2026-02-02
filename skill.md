@@ -81,7 +81,7 @@ Every specification contains:
 1. Queries WorkIQ for all relevant information about the topic
 2. Synthesizes findings into a comprehensive specification
 3. Formats according to Microsoft standards
-4. Converts to Word with improved diagrams
+4. Converts to Word with professionally formatted diagrams
 
 ### Template Mode (Without WorkIQ)
 1. Creates a structured template with all required sections
@@ -101,15 +101,14 @@ Every specification contains:
 - Files are created in your **current working directory**
 - Navigate to your desired folder before running the skill
 - The skill **never fails** - creates templates when information is unavailable
-- Diagrams in the Word document are automatically improved for professional appearance
+- Diagrams in the Word document are automatically formatted in professional bordered boxes
 - All sections follow Microsoft specification writing standards
 
 ## Customization
 
 The skill can be customized by editing:
 - `instructions.md` - Modify document structure and sections
-- `convert-to-word.ps1` - Adjust Word formatting styles
-- `improve-diagrams.ps1` - Customize diagram appearance
+- `convert-to-word.ps1` - Adjust Word formatting styles and diagram appearance
 
 ## Troubleshooting
 
@@ -128,7 +127,7 @@ Created by Saurabh Agarwal (sauagarwal@microsoft.com)
 
 ## Version
 
-1.5.0
+1.6.0
 
 ## License
 

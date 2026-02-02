@@ -135,9 +135,6 @@ Ask Claude: "Extract project plan from <spec> as a table"
 → Normal! Check Open Questions for what's missing
 → Sections with insufficient data are marked clearly
 
-### "Diagrams look wrong"
-→ Re-run improve-diagrams.ps1 script manually
-
 ### "Need to add custom content"
 → Edit the markdown, then re-convert to Word
 

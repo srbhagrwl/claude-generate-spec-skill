@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -13,7 +13,7 @@
 |---------|-------------|
 | 🤖 **Automatic Information Gathering** | Queries WorkIQ for emails, meetings, documents, Teams conversations |
 | 📝 **Professional Formatting** | Microsoft-standard specs with tables, diagrams, and proper structure |
-| 📄 **Word Document Generation** | Converts to beautifully formatted .docx files with improved diagrams |
+| 📄 **Word Document Generation** | Converts to beautifully formatted .docx files with professional diagrams |
 | 🔄 **Template Fallback Mode** | Creates structured templates when WorkIQ unavailable |
 | ⚡ **Massive Time Savings** | Reduces 8-12 hours of work to ~5 minutes |
 | 🎯 **Never Fails** | Always produces useful output - automatic or template mode |
@@ -150,7 +150,7 @@ Every specification includes:
 
 📄 Phase 3: Word Conversion
    ✓ Converted to Word format
-   ✓ Improved 2 diagrams
+   ✓ Formatted 2 diagrams in bordered boxes
    ✓ Saved: ./Folder Affinity - Specification.docx
 
 ✅ Done! Share the .docx with stakeholders.
@@ -181,14 +181,6 @@ Every specification includes:
 
 ## ⚙️ Customization
 
-### Modify Diagram Styles
-
-Edit `improve-diagrams.ps1` to customize:
-- Colors (borders, backgrounds)
-- Fonts and sizes
-- Component layouts
-- Arrow styles
-
 ### Change Document Structure
 
 Edit `instructions.md` to modify:
@@ -204,6 +196,7 @@ Edit `convert-to-word.ps1` to customize:
 - Heading styles
 - Table styles
 - Code block appearance
+- Diagram formatting (borders, colors, fonts)
 
 ## 🐛 Troubleshooting
 
@@ -267,6 +260,8 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.6.0** (2026-02-02) - Removed improve-diagrams.ps1, simplified workflow
+- **v1.5.0** (2026-02-02) - Added comprehensive skill.md documentation file
 - **v1.4.0** (2026-02-02) - Template fallback mode for WorkIQ unavailability
 - **v1.3.0** (2026-02-02) - Current directory output for file control
 - **v1.2.0** (2026-02-02) - Renamed to FORMATTING-GUIDELINES.md for clarity

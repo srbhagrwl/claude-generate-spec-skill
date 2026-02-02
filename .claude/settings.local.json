@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"c:\\\\Users\\\\sauagarwal\\\\claude-generate-spec-skill\\\\improve-diagrams.ps1\" -WordPath \"C:\\\\Users\\\\sauagarwal\\\\OneDrive - Microsoft\\\\Desktop\\\\Email Folder Affinity Signal - Specification.docx\")",
+      "Bash(powershell.exe -Command \"Get-Content ''c:\\\\Users\\\\sauagarwal\\\\claude-generate-spec-skill\\\\improve-diagrams.ps1'' -Encoding UTF8 | Select-Object -Last 5\")",
+      "Bash(powershell.exe -Command \"\\(Get-Content ''c:\\\\Users\\\\sauagarwal\\\\claude-generate-spec-skill\\\\improve-diagrams.ps1'' -Raw\\) -match ''\\\\u2713''\")"
+    ]
+  }
+}
