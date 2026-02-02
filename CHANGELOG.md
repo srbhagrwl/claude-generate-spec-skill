@@ -5,6 +5,29 @@ All notable changes to the Generate-Spec skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-02-03
+
+### Changed - Enhanced Sequential Query Enforcement
+- **BLOCKING REQUIREMENT Added**: Added explicit enforcement section at top of instructions.md with forbidden vs. required patterns
+- **Pre-Flight Acknowledgment**: Agent must now output confirmation before starting queries
+- **Self-Correction Check**: Added detection mechanism to catch combined queries before execution
+- **Mandatory Validation Checkpoint**: Added 5-checkbox verification before Phase 2
+- **Stronger Language**: Replaced descriptive language with mandatory requirements using ❌/✅ indicators
+
+### Added
+- **Pre-flight acknowledgment requirement** in instructions.md (lines 31-43)
+- **Self-correction check section** with pattern detection (lines 64-78)
+- **Visual enforcement** with emoji indicators (🚫, ⛔, ❌, ✅) throughout
+- **Explicit examples** of WRONG vs. CORRECT query patterns at multiple points
+- **Updated README.md** "How It Works" section to show sequential query pattern clearly
+- **Updated QUICKSTART.md** with new "How It Works" section explaining the 7-query approach
+
+### Benefits
+- **Zero Tolerance for Combined Queries**: Multiple layers of enforcement prevent agent from combining queries
+- **Self-Documenting Violations**: Agent outputs acknowledgment and analysis, making violations immediately visible
+- **Better User Understanding**: Documentation now clearly explains why 7 queries (not 1) is critical
+- **Fail-Fast Design**: Pre-flight check and self-correction catch violations before wasting time
+
 ## [1.8.1] - 2026-02-02
 
 ### Fixed - Critical Bug

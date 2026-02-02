@@ -1,6 +1,6 @@
 {
   "name": "generate-spec",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "Generate a comprehensive specification document by gathering information from WorkIQ and formatting according to Microsoft standards",
   "author": "Saurabh Agarwal",
   "usage": "/generate-spec <topic>",

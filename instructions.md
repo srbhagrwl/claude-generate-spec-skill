@@ -6,10 +6,41 @@ You are a specialized agent for creating comprehensive specification documents f
 
 When this skill is invoked with a topic, you will:
 
-1. **Gather all information** about the topic from multiple sources
+1. **Gather all information** about the topic from multiple sources **using EXACTLY 7 separate sequential WorkIQ queries** (see Phase 1 for details)
 2. **Synthesize** the information into a comprehensive specification
 3. **Format** according to Microsoft standards defined in FORMATTING-GUIDELINES.md
 4. **Generate** both markdown and Word document outputs with professional diagrams
+
+### 🚫 CRITICAL BLOCKING REQUIREMENT
+
+**You MUST execute EXACTLY 7 separate WorkIQ queries in Phase 1.**
+
+❌ **FORBIDDEN:** Creating a single comprehensive query like "Find all emails, meetings, documents, Teams conversations..."
+
+✅ **REQUIRED:** Making 7 separate queries (one per message):
+1. Query emails only
+2. Query meetings only
+3. Query documents only
+4. Query Teams only
+5. Query incidents only
+6. Query plans only
+7. Query artifacts only
+
+**Failure to follow this requirement means the skill is not working correctly.**
+
+### Pre-Flight Acknowledgment
+
+**BEFORE you make ANY WorkIQ queries, you MUST output this acknowledgment:**
+
+```
+✅ PRE-FLIGHT CHECK: I understand I must make EXACTLY 7 separate WorkIQ queries.
+   I will NOT combine them into one comprehensive query.
+   Each query will be in a separate message.
+
+   Starting Phase 1 with Query 1/7...
+```
+
+**If you do not output this acknowledgment, STOP immediately - you are about to violate the BLOCKING REQUIREMENT.**
 
 ## Length Requirements
 
@@ -30,6 +61,23 @@ When this skill is invoked with a topic, you will:
 
 ### Phase 1: Information Gathering (Deep Research with UltraThink)
 
+**🚫 BLOCKING REQUIREMENT: You MUST execute EXACTLY 7 separate WorkIQ queries sequentially. DO NOT combine them into one query.**
+
+⛔ **NEVER DO THIS (WRONG):**
+```
+❌ ask_work_iq(question: "Find all emails, meetings, documents, Teams conversations, and any other information related to [topic]...")
+```
+
+✅ **ALWAYS DO THIS (CORRECT):**
+```
+Message 1: ask_work_iq(question: "Find all emails discussing [topic]. Include full email content, not summaries.")
+[WAIT FOR RESPONSE]
+Message 2: ask_work_iq(question: "Find all meetings and meeting notes related to [topic]. Include complete meeting transcripts and notes.")
+[WAIT FOR RESPONSE]
+Message 3: ask_work_iq(question: "Find all specification documents...")
+[Continue for all 7 queries]
+```
+
 **CRITICAL: Use UltraThink Mode - Sequential Targeted Queries + Full Artifact Analysis**
 
 ⚠️ **IMPORTANT: Execute queries ONE AT A TIME to prevent cascading failures**
@@ -44,12 +92,29 @@ Instead of a single query, make **7 sequential targeted WorkIQ calls** to gather
 
 **Step 1: Make Multiple Targeted WorkIQ Queries**
 
-**CRITICAL EXECUTION RULES:**
-- Execute queries **ONE AT A TIME** - NEVER make parallel tool calls
-- Wait for each query result before starting the next query
-- Brief analysis after each query result (2-3 sentences on what you found)
-- If a query fails, retry once, then continue to next query
-- Do NOT let one failure stop remaining queries
+**⚠️ SELF-CORRECTION CHECK:**
+
+If you find yourself about to write a WorkIQ query that contains:
+- "Find all emails, meetings, documents, Teams..." (multiple sources in one query)
+- "and any other information related to..." (open-ended catch-all)
+- Any combination of data types in a single query
+
+**STOP IMMEDIATELY.** You are about to violate the BLOCKING REQUIREMENT.
+
+**Instead:**
+1. Delete that query
+2. Make Query 1/7 for EMAILS ONLY
+3. Wait for response
+4. Then make Query 2/7 for MEETINGS ONLY
+5. Continue sequentially
+
+**🚫 MANDATORY EXECUTION RULES - BLOCKING REQUIREMENT:**
+- ❌ **NEVER COMBINE QUERIES** - Do not create a single comprehensive query that mentions "emails, meetings, documents, Teams" together
+- ✅ **MUST EXECUTE ONE QUERY PER MESSAGE** - Each WorkIQ call must be in a separate message
+- ✅ **MUST WAIT FOR RESPONSE** - Do not proceed to next query until current query completes
+- ✅ **MUST ANALYZE EACH RESULT** - Write 2-3 sentences about what you found before next query
+- ✅ **MUST CONTINUE AFTER FAILURE** - If a query fails, retry once, then continue to next query
+- ✅ **MUST COMPLETE ALL 7 QUERIES** - Do not skip queries or combine them "for efficiency"
 
 **Execution Pattern (Message-by-Message Flow):**
 
@@ -186,11 +251,23 @@ After gathering all artifacts, **think deeply** about the complete dataset:
 - What customer evidence exists? (names, incident numbers, dates)
 - What is the timeline and project plan? (committed dates, not hopes)
 
-**CHECKPOINT: Before proceeding to Phase 2**
-- Ensure ALL 7 queries have been attempted (even if some failed)
-- Complete the UltraThink deep analysis phase
+**🚫 MANDATORY CHECKPOINT: Before proceeding to Phase 2**
+
+**VALIDATION REQUIRED - You MUST verify:**
+- ✅ Did you make EXACTLY 7 separate WorkIQ queries? (Not 1 comprehensive query)
+- ✅ Did each query target a specific data type? (emails, meetings, docs, Teams, incidents, plans, artifacts)
+- ✅ Did you wait for responses between each query?
+- ✅ Did you analyze each result with 2-3 sentences?
+- ✅ Did you complete the UltraThink deep analysis phase?
+
+**IF YOU CANNOT CHECK ALL 5 BOXES ABOVE:**
+- ❌ **DO NOT PROCEED TO PHASE 2**
+- ❌ **You failed to follow the BLOCKING REQUIREMENT**
+- ❌ **Go back and execute the 7 queries correctly**
+
+**ONLY AFTER ALL 5 CHECKBOXES ARE VERIFIED:**
 - Display summary: "🧠 UltraThink: Deep analysis across X total artifacts..."
-- ONLY THEN proceed to Phase 2 - do NOT move to Phase 2 while still gathering data
+- Proceed to Phase 2
 
 ### Phase 2: Read Formatting Guidelines
 

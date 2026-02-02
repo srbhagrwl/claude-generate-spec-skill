@@ -28,10 +28,11 @@ Simply invoke the skill with your topic:
 ```
 
 **What happens:**
-1. Gathers all voicemail-related emails, meetings, Teams chats
-2. Identifies Viktoria, Shubha, and other stakeholders
-3. Creates spec with problem statement and CY26H1 planning
-4. Outputs Word doc ready to share
+1. **7 Sequential Queries**: Searches emails → meetings → docs → Teams → incidents → plans → artifacts (one at a time)
+2. **UltraThink Analysis**: Cross-references all sources to identify patterns and decisions
+3. **Identifies Stakeholders**: Finds Viktoria, Shubha, and other key people with roles
+4. **Creates Spec**: Generates complete specification with problem statement and CY26H1 planning
+5. **Outputs Word Doc**: Professional .docx file ready to share
 
 ### Example 3: Shared Mailbox Search
 ```
@@ -44,7 +45,28 @@ Simply invoke the skill with your topic:
 3. Creates spec with evaluation criteria
 4. Includes competing solutions (Gmail, etc.)
 
-## 3. What You Get
+## 3. How It Works (Behind the Scenes)
+
+The skill uses a powerful **UltraThink Mode** that:
+
+1. **Makes 7 Sequential Queries** (not 1 combined query):
+   - Query 1: Emails only
+   - Query 2: Meetings only
+   - Query 3: Documents only
+   - Query 4: Teams conversations only
+   - Query 5: Customer incidents only
+   - Query 6: Project plans only
+   - Query 7: Related artifacts only
+
+2. **Analyzes Each Result** before moving to the next query
+
+3. **Cross-References Everything** to find patterns, contradictions, and key decisions
+
+4. **Synthesizes** into a comprehensive specification document
+
+**Why 7 separate queries?** Prevents cascading failures and ensures complete data collection even if some queries fail.
+
+## 4. What You Get
 
 Two files in your **current directory**:
 
@@ -55,7 +77,7 @@ Two files in your **current directory**:
 
 **Tip:** Navigate to where you want the files before running the command!
 
-## 4. What's Inside
+## 5. What's Inside
 
 Every spec includes:
 
@@ -69,7 +91,7 @@ Every spec includes:
 | **Open Questions** | What needs clarification |
 | **Appendix** | Technical deep-dives |
 
-## 5. Review Checklist
+## 6. Review Checklist
 
 After generation, quickly check:
 
@@ -81,7 +103,7 @@ After generation, quickly check:
 - [ ] Diagrams are clear
 - [ ] Tables are complete
 
-## 6. Common Follow-Ups
+## 7. Common Follow-Ups
 
 After generating a spec, you might want to:
 
@@ -106,7 +128,7 @@ Ask Claude: "Convert <doc> to markdown following FORMATTING-GUIDELINES.md"
 Ask Claude: "Extract project plan from <spec> as a table"
 ```
 
-## 7. Pro Tips
+## 8. Pro Tips
 
 ✅ **DO:**
 - Use specific topic names ("folder affinity" not "emails")
@@ -120,7 +142,7 @@ Ask Claude: "Extract project plan from <spec> as a table"
 - Edit the Word doc before reviewing markdown
 - Forget to follow up on Open Questions
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 ### "WorkIQ not available"
 → **No problem!** Skill creates a structured template automatically
@@ -138,7 +160,7 @@ Ask Claude: "Extract project plan from <spec> as a table"
 ### "Need to add custom content"
 → Edit the markdown, then re-convert to Word
 
-## 9. Time Savings
+## 10. Time Savings
 
 | Manual Process | With Skill |
 |---------------|------------|
@@ -148,7 +170,7 @@ Ask Claude: "Extract project plan from <spec> as a table"
 | Diagram creation: 1 hour | 30 seconds |
 | **Total: ~8-12 hours** | **~5 minutes** |
 
-## 10. Next Steps
+## 11. Next Steps
 
 1. Try it now:
    ```

@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.9.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -136,12 +136,24 @@ Every specification includes:
 ```
 📋 /generate-spec folder affinity
 
-🔍 Phase 1: Information Gathering
-   ✓ Found 15 emails
-   ✓ Found 3 meetings
-   ✓ Found 8 documents
-   ✓ Found 42 Teams conversations
-   ✓ Identified 12 stakeholders
+🔍 Phase 1: Information Gathering (UltraThink Mode - Sequential Queries)
+   Note: Executing queries ONE AT A TIME to prevent failures
+
+   → Query 1/7: Searching emails...
+   ✓ Found 15 emails (retrieved full content)
+   📊 Brief analysis: Found 12 stakeholders, 8 key threads
+
+   → Query 2/7: Searching meetings...
+   ✓ Found 3 meetings (retrieved complete notes)
+   📊 Brief analysis: Key decisions on Q1 priorities
+
+   → Query 3/7: Searching specification documents...
+   ✓ Found 8 documents (retrieved full content)
+   📊 Brief analysis: Found mature specs covering main areas
+
+   [Queries 4-7 continue sequentially...]
+
+   🧠 UltraThink: Deep analysis across 68 total artifacts...
 
 📝 Phase 2: Document Generation
    ✓ Created comprehensive specification (742 lines)
@@ -294,6 +306,7 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.9.0** (2026-02-03) - Enhanced enforcement: Added pre-flight acknowledgment, self-correction checks, and mandatory validation to ensure 7 sequential queries
 - **v1.8.1** (2026-02-02) - Critical fix: Eliminates cascading WorkIQ query failures with true sequential execution
 - **v1.8.0** (2026-02-02) - UltraThink mode: 7 targeted WorkIQ queries with complete artifact retrieval and deep cross-source analysis
 - **v1.7.0** (2026-02-02) - Enhanced Word conversion with configurable colors, hyperlinks fix, images/blockquotes support
