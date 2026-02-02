@@ -40,7 +40,7 @@ function Replace-WithFlowchart {
         $word.Selection.Delete()
 
         # Create new flowchart table
-        $numRows = ($components.Count * 2) - 1  # Components + arrows
+        $numRows = ($components.Count * 2) - 1
         $table = $doc.Tables.Add($word.Selection.Range, $numRows, 1)
         $table.Borders.Enable = $false
         $table.AutoFitBehavior(1)
@@ -49,40 +49,41 @@ function Replace-WithFlowchart {
 
         $row = 1
         foreach ($comp in $components) {
+            # Add component box
             $cell = $table.Cell($row, 1)
-            $cellRange = $cell.Range
-            $cellRange.Text = "$($comp.Name)`n$($comp.Desc)"
-            $cellRange.Font.Name = "Calibri"
-            $cellRange.Font.Size = 10
-            $cellRange.ParagraphFormat.Alignment = 1
+            $cell.Range.Text = "$($comp.Name)`n`n$($comp.Desc)"
+            $cell.Range.Font.Name = "Calibri"
+            $cell.Range.Font.Size = 10
             $cell.Shading.BackgroundPatternColor = 15132390
-            $cell.Borders.Enable = $true
-            $cell.Borders.OutsideColor = 49407
-            $cell.Borders.OutsideLineWidth = 4
+            try {
+                $cell.Borders.Enable = $true
+                $cell.Borders.OutsideColor = 49407
+                $cell.Borders.OutsideLineWidth = 8
+            } catch {
+                # Silently ignore border formatting errors
+            }
             $cell.VerticalAlignment = 1
-            $cell.SetHeight(42, 0)
-
-            $firstPara = $cellRange.Paragraphs.Item(1).Range
-            $firstPara.Font.Bold = $true
-            $firstPara.Font.Size = 11
+            $cell.SetHeight(60, 0)
+            $cell.Range.Paragraphs.Item(1).Range.Font.Bold = $true
+            $cell.Range.Paragraphs.Item(1).Range.Font.Size = 11
 
             $row++
 
-            # Add arrow
+            # Add arrow if not last component
             if ($row -le $numRows) {
                 $arrowCell = $table.Cell($row, 1)
                 $arrowCell.Range.Text = [char]0x2193
-                $arrowCell.Range.Font.Size = 16
+                $arrowCell.Range.Font.Size = 18
                 $arrowCell.Range.Font.Color = 49407
                 $arrowCell.Range.ParagraphFormat.Alignment = 1
                 $arrowCell.Borders.Enable = $false
                 $arrowCell.Shading.BackgroundPatternColor = 16777215
-                $arrowCell.SetHeight(15, 0)
+                $arrowCell.SetHeight(20, 0)
                 $row++
             }
         }
 
-        Write-Host "  ✓ Created flowchart diagram" -ForegroundColor Green
+        Write-Host "  [OK] Created flowchart diagram" -ForegroundColor Green
         return $true
     }
 
@@ -109,9 +110,13 @@ function Replace-WithDependencyGrid {
 
         # Create title box
         $titleTable = $doc.Tables.Add($word.Selection.Range, 1, 1)
-        $titleTable.Borders.Enable = $true
-        $titleTable.Borders.OutsideColor = 49407
-        $titleTable.Borders.OutsideLineWidth = 6
+        try {
+            $titleTable.Borders.Enable = $true
+            $titleTable.Borders.OutsideColor = 49407
+            $titleTable.Borders.OutsideLineWidth = 6
+        } catch {
+            # Silently ignore border formatting errors
+        }
         $titleTable.AutoFitBehavior(1)
         $titleTable.PreferredWidthType = 2
         $titleTable.PreferredWidth = 65
@@ -143,9 +148,13 @@ function Replace-WithDependencyGrid {
             $cell.Range.Font.Name = "Calibri"
             $cell.Range.Font.Size = 9
             $cell.Shading.BackgroundPatternColor = $comp.Color
-            $cell.Borders.Enable = $true
-            $cell.Borders.OutsideColor = 49407
-            $cell.Borders.OutsideLineWidth = 3
+            try {
+                $cell.Borders.Enable = $true
+                $cell.Borders.OutsideColor = 49407
+                $cell.Borders.OutsideLineWidth = 8
+            } catch {
+                # Silently ignore border formatting errors
+            }
             $cell.VerticalAlignment = 0
             $cell.SetHeight($comp.Height, 0)
             $cell.Range.Paragraphs.Item(1).Range.Font.Bold = $true
@@ -169,7 +178,7 @@ function Replace-WithDependencyGrid {
         $gridTable.Cell(2, 2).Shading.BackgroundPatternColor = 16777215
         $gridTable.Cell(2, 2).SetHeight(25, 0)
 
-        Write-Host "  ✓ Created dependency grid diagram" -ForegroundColor Green
+        Write-Host "  [OK] Created dependency grid diagram" -ForegroundColor Green
         return $true
     }
 
@@ -177,8 +186,8 @@ function Replace-WithDependencyGrid {
 }
 
 # Look for common diagram patterns and improve them
-
-Write-Host "`nSearching for diagrams to improve..." -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Searching for diagrams to improve..." -ForegroundColor Cyan
 
 # Pattern 1: Signal Architecture / Data Flow diagrams
 $signalComponents = @(
@@ -204,10 +213,11 @@ $improved2 = Replace-WithDependencyGrid -doc $doc -word $word -searchText "Appen
 
 # Save if any improvements were made
 if ($improved1 -or $improved2) {
-    Write-Host "`nSaving improvements..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Saving improvements..." -ForegroundColor Cyan
     try {
         $doc.Save()
-        Write-Host "✓ Diagrams improved successfully!" -ForegroundColor Green
+        Write-Host "[OK] Diagrams improved successfully!" -ForegroundColor Green
 
         if ($improved1) { Write-Host "  - Signal Architecture diagram" -ForegroundColor Gray }
         if ($improved2) { Write-Host "  - Dependency Map diagram" -ForegroundColor Gray }
@@ -222,4 +232,5 @@ $doc.Close()
 $word.Quit()
 [System.Runtime.Interopservices.Marshal]::ReleaseComObject($word) | Out-Null
 
-Write-Host "`nDiagram improvement complete!" -ForegroundColor Green
+Write-Host ""
+Write-Host "Diagram improvement complete!" -ForegroundColor Green
