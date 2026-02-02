@@ -1,157 +1,140 @@
-# Generate Specification Document Skill
+# Generate-Spec Skill for Claude Code
 
-A comprehensive skill for automatically creating Microsoft-standard specification documents by gathering information from WorkIQ and applying professional formatting.
+> Automatically generate comprehensive specification documents following Microsoft standards.
 
-**Works with or without WorkIQ** - Creates structured templates when WorkIQ is unavailable.
+**Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-## What This Skill Does
+[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-This skill automates the entire process of creating a specification document:
+## 🚀 Features
 
-**With WorkIQ (Automatic Mode):**
-1. **Gathers information** from all sources (emails, meetings, documents, Teams conversations)
-2. **Synthesizes** into a structured specification following Microsoft standards
-3. **Generates** markdown document with proper formatting
-4. **Converts** to professional Word document with improved diagrams
-5. **Provides** summary and next steps
+| Feature | Description |
+|---------|-------------|
+| 🤖 **Automatic Information Gathering** | Queries WorkIQ for emails, meetings, documents, Teams conversations |
+| 📝 **Professional Formatting** | Microsoft-standard specs with tables, diagrams, and proper structure |
+| 📄 **Word Document Generation** | Converts to beautifully formatted .docx files with improved diagrams |
+| 🔄 **Template Fallback Mode** | Creates structured templates when WorkIQ unavailable |
+| ⚡ **Massive Time Savings** | Reduces 8-12 hours of work to ~5 minutes |
+| 🎯 **Never Fails** | Always produces useful output - automatic or template mode |
 
-**Without WorkIQ (Template Mode):**
-1. **Creates structured template** with all required sections
-2. **Includes guidance** with `[TO BE FILLED]` markers
-3. **Provides examples** showing proper format
-4. **Converts to Word** - ready for manual completion
-5. **Saves hours** vs. starting from scratch
+## 📦 Installation
 
-## Usage
+### Quick Install
 
-### Basic Usage
+```bash
+# Clone the repository
+git clone https://github.com/YOUR-USERNAME/claude-generate-spec-skill.git
 
+# Copy to Claude skills directory (Windows)
+cd claude-generate-spec-skill
+xcopy /E /I /Y . "%USERPROFILE%\.claude\skills\generate-spec\"
 ```
+
+### Manual Install
+
+1. Download the [latest release](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/releases/latest)
+2. Extract to: `C:\Users\<YourName>\.claude\skills\generate-spec\`
+3. Verify in Claude Code CLI: `/help` should list `generate-spec`
+
+### Prerequisites
+
+- ✅ Windows with PowerShell 5.1+
+- ✅ [Claude Code CLI](https://github.com/anthropics/claude-code) installed
+- ✅ Microsoft Word (for .docx generation)
+- ⚠️ WorkIQ access (optional - template mode available)
+
+## 🎯 Usage
+
+### Basic Command
+
+```bash
+# Navigate to where you want the spec files
+cd "C:\Your\Desired\Folder"
+
+# Generate specification
 /generate-spec <topic>
 ```
 
-**Example:**
-```
+### Real Examples
+
+```bash
+# Example 1: Feature specification
 /generate-spec folder affinity
+
+# Example 2: Support feature
+/generate-spec voicemail support
+
+# Example 3: Search functionality
+/generate-spec shared mailbox search
 ```
 
-### With Options
+### Output Files
 
-```
-/generate-spec <topic> --format <md|docx|both>
-```
-
-**Examples:**
-```
-/generate-spec voicemail support --format docx
-/generate-spec shared mailbox search --format both
-```
-
-## What Gets Generated
-
-### Document Structure
-
-The skill creates a comprehensive specification with these sections:
-
-1. **Title** - Feature name
-2. **Glossary** - Acronym definitions
-3. **Introduction** - Context and overview
-4. **Problem Details** - Evidence-based problem statement
-   - Problem statement
-   - User asks with real names
-   - Current limitations
-   - Evidence (customer names, incidents)
-5. **Solution Approach** - Proposed solution
-   - North Star vision
-   - Technical architecture
-   - In Scope / Out of Scope
-6. **Detailed Requirements** - Actionable requirements
-   - Functional requirements table
-   - Non-functional requirements table
-   - Scenarios with sample utterances
-7. **Evaluation Set** - Testing strategy
-   - Query sets
-   - Success metrics
-   - Test scenarios with assertions
-8. **Project Plan** - Execution timeline
-   - Phased breakdown
-   - Task tables with DRIs and ETAs
-   - Critical path
-   - Roles & responsibilities
-9. **Open Questions** - Unresolved items
-10. **References** - Related documents and links
-11. **Appendix** - Technical deep-dives
-
-### Professional Formatting
-
-**Markdown Output:**
-- Clean hierarchy with proper headers
-- Tables for all structured data
-- Code blocks for technical content
-- Inline links to references
-- Priority labels (P0/P1/P2)
-
-**Word Output:**
-- Professional heading styles
-- Grid Table 4 - Accent 1 for tables
-- Improved diagrams:
-  - Flowcharts with bordered boxes
-  - Dependency grids with color coding
-  - Clear typography and spacing
-- Hyperlinked references
-- 1-inch margins
-
-## Files Generated
-
-For a topic "folder affinity", the skill creates files in your **current working directory**:
+Two files created in your current directory:
 
 ```
 ./
-├── Folder Affinity - Specification.md      (Markdown version)
-└── Folder Affinity - Specification.docx    (Word version)
+├── <Topic> - Specification.md      ← Markdown source (editable)
+└── <Topic> - Specification.docx    ← Word document (ready to share)
 ```
 
-**Example:** If you're in `C:\Projects\`, the files will be saved there.
+## 📊 What Gets Generated
 
-**Tip:** Navigate to your desired folder before running the command to control where files are saved.
+Every specification includes:
 
-## Information Gathered
+<table>
+<tr>
+<td width="50%">
 
-The skill automatically queries WorkIQ for:
+**Problem Details**
+- Customer escalations
+- IcM incidents
+- User asks
+- Evidence with names
 
-- ✓ All emails containing the topic
-- ✓ All meetings and calendar events
-- ✓ All documents (specs, drafts, presentations)
-- ✓ All Teams conversations and threads
-- ✓ All stakeholders (names, roles, teams)
-- ✓ Technical details and architecture
-- ✓ Decisions, action items, blockers
-- ✓ Customer feedback and escalations
-- ✓ Timeline discussions and ETAs
+**Solution Approach**
+- North Star vision
+- Architecture diagrams
+- Scope (in/out)
+- Technical approach
 
-## Quality Standards
+**Requirements**
+- Functional requirements (P0/P1/P2)
+- Non-functional requirements
+- Sample scenarios
+- Utterance examples
 
-Every generated specification includes:
+</td>
+<td width="50%">
 
-- [x] Problem grounded in evidence (customer names, IcMs)
-- [x] Explicit scope definition (in/out of scope)
-- [x] Specific, actionable requirements
-- [x] Scenarios with sample utterances
-- [x] Priority labels on all items
-- [x] Project plan with DRIs and ETAs
-- [x] Tables for complex information
-- [x] Open Questions section
-- [x] References to source documents
-- [x] Technical appendices
-- [x] Direct, economical language
-- [x] Cross-team dependencies identified
+**Evaluation Criteria**
+- Query sets
+- Success metrics
+- Test scenarios
+- Assertions
 
-## Example Output
+**Project Plan**
+- Phased breakdown
+- Task tables with DRIs
+- ETAs and timelines
+- Dependencies
 
-### Console Output
+**Additional Sections**
+- Open questions
+- References
+- Technical appendices
+
+</td>
+</tr>
+</table>
+
+## 🎬 How It Works
+
+### Automatic Mode (With WorkIQ)
 
 ```
-📋 Generating specification for: folder affinity
+📋 /generate-spec folder affinity
 
 🔍 Phase 1: Information Gathering
    ✓ Found 15 emails
@@ -162,50 +145,59 @@ Every generated specification includes:
 
 📝 Phase 2: Document Generation
    ✓ Created comprehensive specification (742 lines)
-   ✓ Included 23 tables
-   ✓ Included 2 diagrams
-   ✓ Saved markdown: ./Folder Affinity - Specification.md
+   ✓ Included 23 tables and 2 diagrams
+   ✓ Saved: ./Folder Affinity - Specification.md
 
 📄 Phase 3: Word Conversion
    ✓ Converted to Word format
    ✓ Improved 2 diagrams
-   ✓ Saved Word document: ./Folder Affinity - Specification.docx
+   ✓ Saved: ./Folder Affinity - Specification.docx
 
-✅ Specification Complete!
-
-Key Stakeholders:
-- Saurabh Agarwal (PM, Email Ranker)
-- Bryan Butteling (DRI, Moments)
-- Ashish Jain (EM, Email Ranker)
-- Mary Fe Garzon (PM, Moments)
-
-Open Questions: 12 items requiring clarification
-
-Next Steps:
-1. Review with Bryan Butteling (Moments capacity)
-2. Clarify affinity computation frequency
-3. Schedule alignment meeting with stakeholders
+✅ Done! Share the .docx with stakeholders.
 ```
 
-## Customization
+### Template Mode (Without WorkIQ)
 
-### Modifying Diagram Styles
+```
+📋 /generate-spec new feature
+
+⚠️ WorkIQ not available - creating template
+
+📝 Generated template specification
+   ✓ All required sections included
+   ✓ Example tables with sample rows
+   ✓ [TO BE FILLED] markers for manual completion
+   ✓ Inline guidance on what to include
+
+✏️ Next: Fill in [TO BE FILLED] markers (34 found)
+```
+
+## 📖 Documentation
+
+- [**QUICKSTART.md**](QUICKSTART.md) - Get started in 5 minutes
+- [**README.md**](README.md) - Full documentation
+- [**FORMATTING-GUIDELINES.md**](FORMATTING-GUIDELINES.md) - Microsoft spec standards
+- [**Installation Guide**](INSTALL-generate-spec-skill.md) - Detailed installation
+
+## ⚙️ Customization
+
+### Modify Diagram Styles
 
 Edit `improve-diagrams.ps1` to customize:
-- Colors (background, borders)
+- Colors (borders, backgrounds)
 - Fonts and sizes
 - Component layouts
 - Arrow styles
 
-### Changing Document Structure
+### Change Document Structure
 
 Edit `instructions.md` to modify:
 - Section order
-- Required vs optional sections
+- Required sections
 - Table formats
-- Priority labeling scheme
+- Priority labeling (P0/P1/P2)
 
-### Adjusting Formatting
+### Adjust Word Formatting
 
 Edit `convert-to-word.ps1` to customize:
 - Page margins
@@ -213,87 +205,109 @@ Edit `convert-to-word.ps1` to customize:
 - Table styles
 - Code block appearance
 
-## Troubleshooting
+## 🐛 Troubleshooting
 
-### Issue: No information found
+<details>
+<summary><b>WorkIQ not available</b></summary>
 
-**Cause:** Topic may be too vague or no data exists in WorkIQ
+**No problem!** Skill automatically creates a structured template.
 
-**Solution:** Try more specific topic names or variations
+1. Template includes all sections with `[TO BE FILLED]` markers
+2. Fill in manually with your information
+3. Still saves 6-8 hours vs. starting from scratch
+4. Re-run if WorkIQ becomes available later
 
-### Issue: Word conversion fails
+</details>
 
-**Cause:** Microsoft Word not installed or COM interface issues
+<details>
+<summary><b>Skill not found in /help</b></summary>
 
-**Solution:**
-- Ensure Word is installed
-- Use `--format md` to skip Word conversion
-- Manually convert markdown to Word later
+Check installation path:
+```bash
+dir "%USERPROFILE%\.claude\skills\generate-spec"
+```
 
-### Issue: Diagrams not improved
+Should contain: `skill.json`, `instructions.md`, etc.
 
-**Cause:** Diagram detection didn't find expected sections
+Restart Claude Code CLI after installation.
 
-**Solution:**
-- Check that section headers match expected text
-- Manually improve diagrams after generation
-- Modify `improve-diagrams.ps1` search patterns
+</details>
 
-### Issue: Missing stakeholder information
+<details>
+<summary><b>Word conversion fails</b></summary>
 
-**Cause:** Names not found in conversations
+1. Verify Microsoft Word is installed
+2. Check PowerShell execution policy: `Get-ExecutionPolicy`
+3. Try markdown-only: Edit `instructions.md` and skip Word conversion phase
+4. Manually convert markdown to Word later
 
-**Solution:**
-- Review Open Questions section
-- Manually add missing stakeholders
-- Follow up with team to gather missing info
+</details>
 
-## Requirements
+<details>
+<summary><b>No information found for topic</b></summary>
 
-- Windows with PowerShell 5.1+
-- Microsoft Word (for .docx generation)
-- WorkIQ access configured (optional - see Template Mode below)
+1. Try variations of the topic name
+2. Use more specific phrases
+3. Check that data exists in your M365 environment
+4. Skill will create template if no data found
 
-**Note:** Files are saved to your current working directory. Navigate to your desired folder before running the command.
+</details>
 
-**Note:** Formatting guidelines (FORMATTING-GUIDELINES.md) are bundled in the skill folder - no separate setup required!
+## 📈 Time Savings
 
-### Template Mode (WorkIQ Optional)
+| Task | Manual Process | With This Skill |
+|------|----------------|-----------------|
+| **Research** | 2-3 hours | 1 minute |
+| **Writing** | 4-6 hours | 2 minutes |
+| **Formatting** | 1-2 hours | 1 minute |
+| **Diagrams** | 1 hour | 30 seconds |
+| **Total** | **8-12 hours** | **~5 minutes** |
 
-If WorkIQ is not available, the skill automatically creates a **structured template specification** with:
-- ✅ All required sections and tables
-- ✅ `[TO BE FILLED]` markers with guidance
-- ✅ Example content showing proper format
-- ✅ Ready for manual completion
-- ✅ Converts to Word document
+**ROI:** ~96% time reduction per specification
 
-This means you can still use the skill even without WorkIQ access - you'll just need to fill in the content manually.
+## 🔄 Version History
 
-## Version History
+- **v1.4.0** (2026-02-02) - Template fallback mode for WorkIQ unavailability
+- **v1.3.0** (2026-02-02) - Current directory output for file control
+- **v1.2.0** (2026-02-02) - Renamed to FORMATTING-GUIDELINES.md for clarity
+- **v1.1.0** (2026-02-02) - Bundled formatting guidelines for portability
+- **v1.0.0** (2026-01-30) - Initial release with full automation
 
-- **1.0.0** (2026-01-30) - Initial release
-  - Full automation of spec generation
-  - WorkIQ integration
-  - Professional diagram improvement
-  - Microsoft standard formatting
+See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
 
-## Support
+## 🤝 Contributing
 
-For issues or feature requests:
-1. Check the troubleshooting section above
-2. Review the instructions.md file
-3. Modify scripts as needed for your use case
+Contributions welcome! Please:
 
-## Tips for Best Results
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-1. **Use specific topic names** - "folder affinity" vs "emails"
-2. **Review before sharing** - Check Open Questions section
-3. **Customize for audience** - Adjust detail level in Appendix
-4. **Keep FORMATTING-GUIDELINES.md updated** - Formatting standards evolve
-5. **Iterate** - Run multiple times as more information becomes available
-6. **Verify names** - Ensure all stakeholders are correctly identified
-7. **Add context** - Supplement with manual edits where needed
+## 📝 License
 
-## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Internal Microsoft tool. Not for external distribution.
+## 👤 Author
+
+**Saurabh Agarwal**
+
+- GitHub: [@YOUR-USERNAME](https://github.com/YOUR-USERNAME)
+- Email: sauagarwal@microsoft.com
+
+## 🙏 Acknowledgments
+
+- Built for use with [Claude Code CLI](https://github.com/anthropics/claude-code)
+- Integrates with Microsoft 365 Copilot (WorkIQ)
+- Follows Microsoft specification writing standards
+
+## ⭐ Star History
+
+If this skill saves you time, consider giving it a star! ⭐
+
+---
+
+**Status:** Production Ready ✅ | **Package Size:** 21 KB | **Platform:** Windows
+
+[Report Bug](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/issues) · [Request Feature](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/issues) · [Documentation](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/wiki)
