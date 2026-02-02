@@ -293,7 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Saurabh Agarwal**
 
-- GitHub: [@YOUR-USERNAME](https://github.com/YOUR-USERNAME)
+- GitHub: [@srbhagrwl](https://github.com/srbhagrwl)
 - Email: sauagarwal@microsoft.com
 
 ## 🙏 Acknowledgments
