@@ -294,7 +294,7 @@ try {
     }
 
     $doc.SaveAs([ref]$WordPath, [ref]16)
-    Write-Host "✓ Word document created successfully!" -ForegroundColor Green
+    Write-Host "[OK] Word document created successfully!" -ForegroundColor Green
 } catch {
     Write-Host "ERROR: Failed to save document: $_" -ForegroundColor Red
     exit 1
