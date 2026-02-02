@@ -5,6 +5,25 @@ All notable changes to the Generate-Spec skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-02-02
+
+### Fixed - Critical Bug
+- **Cascading Query Failures**: Fixed "sibling tool call errored" issue where one WorkIQ query failure would cascade and fail all subsequent queries
+- **True Sequential Execution**: Enforced ONE query per message to prevent parallel execution that causes cascading failures
+- **Improved Resilience**: One query failure no longer blocks remaining queries - continues with available data
+
+### Changed
+- **Execution Instructions**: Added explicit "NEVER make parallel tool calls" instruction with detailed explanation
+- **Brief Analysis Requirement**: Each query now requires 2-3 sentence analysis before proceeding to next query
+- **Console Output**: Updated all examples to show true sequential execution pattern with "ONE AT A TIME" notes
+- **Error Handling**: Enhanced graceful degradation - proceeds if 4+ queries succeed, only falls back to template if first 3 critical queries ALL fail
+
+### Benefits
+- **Eliminates Cascading Failures**: No more "sibling tool call errored" blocking entire information gathering
+- **Better Data Collection**: Brief analysis between queries provides better context for subsequent queries
+- **Increased Success Rate**: Single query failure doesn't doom the entire process
+- **Clearer Progress**: Users see exactly which queries succeeded/failed with specific messages
+
 ## [1.8.0] - 2026-02-02
 
 ### Changed - UltraThink Mode

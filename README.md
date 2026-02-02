@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -294,6 +294,7 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.8.1** (2026-02-02) - Critical fix: Eliminates cascading WorkIQ query failures with true sequential execution
 - **v1.8.0** (2026-02-02) - UltraThink mode: 7 targeted WorkIQ queries with complete artifact retrieval and deep cross-source analysis
 - **v1.7.0** (2026-02-02) - Enhanced Word conversion with configurable colors, hyperlinks fix, images/blockquotes support
 - **v1.6.0** (2026-02-02) - Removed improve-diagrams.ps1, simplified workflow
