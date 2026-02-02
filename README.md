@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -191,12 +191,46 @@ Edit `instructions.md` to modify:
 
 ### Adjust Word Formatting
 
-Edit `convert-to-word.ps1` to customize:
-- Page margins
-- Heading styles
-- Table styles
-- Code block appearance
-- Diagram formatting (borders, colors, fonts)
+The `convert-to-word.ps1` script now supports customization via command-line parameters (no editing required):
+
+**Color Customization:**
+```powershell
+.\convert-to-word.ps1 -MarkdownPath "spec.md" -WordPath "spec.docx" `
+    -HeadingColor 5395026 `
+    -CodeBlockBgColor 15132390 `
+    -TableHeaderBgColor 13421619 `
+    -DiagramBorderColor 49407
+```
+
+**Table Style:**
+```powershell
+.\convert-to-word.ps1 -MarkdownPath "spec.md" -WordPath "spec.docx" `
+    -TableStyle "Grid Table 5 Dark - Accent 1"
+```
+
+**Output Control:**
+```powershell
+# Verbose mode - shows detailed progress
+.\convert-to-word.ps1 -MarkdownPath "spec.md" -WordPath "spec.docx" -VerboseOutput
+
+# Quiet mode - minimal output for automation
+.\convert-to-word.ps1 -MarkdownPath "spec.md" -WordPath "spec.docx" -Quiet
+```
+
+**Color Presets:**
+
+| Theme | HeadingColor | CodeBlockBgColor | TableHeaderBgColor |
+|-------|-------------|------------------|-------------------|
+| **Default (Microsoft Blue)** | 49407 | 15790320 | 14083324 |
+| **Modern Corporate** | 5395026 | 15132390 | 13421619 |
+| **Warm Professional** | 5066061 | 15790320 | 15395562 |
+| **High Contrast** | 0 | 15790320 | 12632256 |
+
+**New Markdown Features Supported:**
+- Horizontal rules (`---`, `***`, `___`)
+- Images (`![alt](path/to/image.png)`)
+- Blockquotes (`> quote text`)
+- Nested formatting in links (`[**bold link**](url)`)
 
 ## 🐛 Troubleshooting
 
@@ -260,6 +294,7 @@ Restart Claude Code CLI after installation.
 
 ## 🔄 Version History
 
+- **v1.7.0** (2026-02-02) - Enhanced Word conversion with configurable colors, hyperlinks fix, images/blockquotes support
 - **v1.6.0** (2026-02-02) - Removed improve-diagrams.ps1, simplified workflow
 - **v1.5.0** (2026-02-02) - Added comprehensive skill.md documentation file
 - **v1.4.0** (2026-02-02) - Template fallback mode for WorkIQ unavailability

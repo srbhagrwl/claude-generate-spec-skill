@@ -5,6 +5,37 @@ All notable changes to the Generate-Spec skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-02-02
+
+### Added
+- **Configurable Color Scheme**: New parameters for customizing heading, code block, table header, and diagram border colors
+- **Custom Table Styles**: `-TableStyle` parameter to choose from Word's built-in table styles
+- **Verbose Mode**: `-VerboseOutput` flag for detailed line-by-line processing information
+- **Quiet Mode**: `-Quiet` flag for minimal output (ideal for automation)
+- **Horizontal Rules Support**: Markdown `---`, `***`, `___` now render as horizontal lines in Word
+- **Image Support**: `![alt](path)` syntax now embeds images with auto-sizing (max 400px width)
+- **Blockquote Support**: `> text` syntax renders as italicized, indented text with background
+- **Enhanced Hyperlinks**: Fixed nested markdown in links (e.g., `[**bold link**](url)`)
+- **Color Presets**: Pre-defined color schemes (Modern Corporate, Warm Professional, High Contrast)
+
+### Fixed
+- **Hyperlink Generation**: Fixed bug where hyperlinks were not clickable in Word documents
+- **Nested Formatting**: Links with bold/code formatting now render correctly
+- **Table Cell Hyperlinks**: Links in table cells are now properly converted to clickable hyperlinks
+- **Error Recovery**: Added try-catch around table processing to prevent total failure
+
+### Changed
+- **Cleaner Output**: Removed verbose debug messages from normal operation
+- **Better Progress Reporting**: Progress bar now shows "(currentLine/totalLines lines)"
+- **Improved Path Handling**: Converts to absolute paths with better error messages
+
+### Benefits
+- **Fully Customizable**: Change colors without editing code
+- **Production Ready**: Quiet mode for CI/CD pipelines and automation
+- **More Features**: Images, blockquotes, and horizontal rules now supported
+- **Better Reliability**: Error handling prevents single table failure from breaking entire document
+- **Time Savings**: Verbose mode helps debug large documents
+
 ## [1.6.0] - 2026-02-02
 
 ### Removed

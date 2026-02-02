@@ -6,12 +6,37 @@ param(
     [string]$MarkdownPath,
 
     [Parameter(Mandatory=$true)]
-    [string]$WordPath
+    [string]$WordPath,
+
+    [Parameter(Mandatory=$false)]
+    [int]$HeadingColor = 49407,  # Microsoft Blue (RGB 0,192,255)
+
+    [Parameter(Mandatory=$false)]
+    [int]$CodeBlockBgColor = 15790320,  # Light Gray (RGB 240,240,240)
+
+    [Parameter(Mandatory=$false)]
+    [int]$TableHeaderBgColor = 14083324,  # Light Blue (RGB 214,236,252)
+
+    [Parameter(Mandatory=$false)]
+    [int]$DiagramBorderColor = 49407,  # Microsoft Blue
+
+    [Parameter(Mandatory=$false)]
+    [string]$TableStyle = "Grid Table 4 - Accent 1",
+
+    [Parameter(Mandatory=$false)]
+    [switch]$VerboseOutput,
+
+    [Parameter(Mandatory=$false)]
+    [switch]$Quiet
 )
 
-Write-Host "Converting markdown to Word document..." -ForegroundColor Cyan
-Write-Host "Input:  $MarkdownPath" -ForegroundColor Gray
-Write-Host "Output: $WordPath" -ForegroundColor Gray
+if (-not $Quiet) {
+    Write-Host "Converting markdown to Word document..." -ForegroundColor Cyan
+    if ($VerboseOutput) {
+        Write-Host "Input:  $MarkdownPath" -ForegroundColor Gray
+        Write-Host "Output: $WordPath" -ForegroundColor Gray
+    }
+}
 
 if (-not (Test-Path $MarkdownPath)) {
     Write-Host "ERROR: Markdown file not found!" -ForegroundColor Red
@@ -22,8 +47,13 @@ if (-not (Test-Path $MarkdownPath)) {
 $content = Get-Content -Path $MarkdownPath -Raw -Encoding UTF8
 
 # Create Word application
-$word = New-Object -ComObject Word.Application
-$word.Visible = $false
+try {
+    $word = New-Object -ComObject Word.Application
+    $word.Visible = $false
+} catch {
+    Write-Host "ERROR: Failed to create Word application: $_" -ForegroundColor Red
+    exit 1
+}
 
 # Create new document
 $doc = $word.Documents.Add()
@@ -43,7 +73,7 @@ function Test-IsDiagram {
 
 # Function to create a formatted diagram box
 function Add-DiagramBox {
-    param($lines, $sel, $document)
+    param($lines, $sel, $document, $bgColor, $borderColor)
 
     $sel.Style = "Normal"
     $sel.Font.Name = "Consolas"
@@ -52,7 +82,7 @@ function Add-DiagramBox {
     $sel.ParagraphFormat.RightIndent = 36
     $sel.ParagraphFormat.SpaceBefore = 6
     $sel.ParagraphFormat.SpaceAfter = 6
-    $sel.ParagraphFormat.Shading.BackgroundPatternColor = 15790320  # Light gray
+    $sel.ParagraphFormat.Shading.BackgroundPatternColor = $bgColor
 
     foreach ($line in $lines) {
         $sel.TypeText($line)
@@ -63,7 +93,7 @@ function Add-DiagramBox {
     $sel.MoveUp(5, $lines.Count)
     $sel.MoveDown(5, $lines.Count, 1)
     $sel.Borders.Enable = $true
-    $sel.Borders.OutsideColor = 49407  # Microsoft blue
+    $sel.Borders.OutsideColor = $borderColor
     $sel.Borders.OutsideLineWidth = 2
 
     # Move to end
@@ -76,6 +106,53 @@ function Add-DiagramBox {
     $sel.ParagraphFormat.LeftIndent = 0
     $sel.ParagraphFormat.RightIndent = 0
     $sel.ParagraphFormat.Shading.BackgroundPatternColor = 16777215
+}
+
+# Function to process text with mixed formatting (bold, code, links)
+function Add-FormattedText {
+    param($text, $sel, $document)
+
+    # Process the text character by character, handling nested formatting
+    $i = 0
+    while ($i -lt $text.Length) {
+        # Check for markdown link [text](url)
+        if ($text[$i] -eq '[' -and $text.Substring($i) -match '^\[(.+?)\]\((.+?)\)') {
+            $linkText = $matches[1]
+            $linkUrl = $matches[2]
+
+            # Strip markdown from link text (bold, code, etc.)
+            $cleanLinkText = $linkText -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
+
+            # Create hyperlink
+            $range = $sel.Range
+            $range.Collapse(0)  # Collapse to end
+            $document.Hyperlinks.Add($range, $linkUrl, $null, $null, $cleanLinkText) | Out-Null
+            $sel.Collapse(0)  # Move selection after hyperlink
+
+            $i += $matches[0].Length
+        }
+        # Check for bold **text**
+        elseif ($text.Substring($i) -match '^\*\*(.+?)\*\*') {
+            $sel.Font.Bold = $true
+            $sel.TypeText($matches[1])
+            $sel.Font.Bold = $false
+            $i += $matches[0].Length
+        }
+        # Check for inline code `text`
+        elseif ($text[$i] -eq '`' -and $text.Substring($i) -match '^`(.+?)`') {
+            $sel.Font.Name = "Consolas"
+            $sel.Font.Size = 10
+            $sel.TypeText($matches[1])
+            $sel.Font.Name = "Calibri"
+            $sel.Font.Size = 11
+            $i += $matches[0].Length
+        }
+        # Regular character
+        else {
+            $sel.TypeText($text[$i])
+            $i++
+        }
+    }
 }
 
 # Parse and format the markdown
@@ -94,19 +171,22 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
 
     if ($currentLine % 100 -eq 0) {
         $percent = [math]::Round(($currentLine / $totalLines) * 100)
-        Write-Progress -Activity "Converting to Word" -Status "$percent% Complete" -PercentComplete $percent
+        Write-Progress -Activity "Converting to Word" -Status "$percent% Complete ($currentLine/$totalLines lines)" -PercentComplete $percent
+        if ($VerboseOutput) {
+            Write-Host "Processing line $currentLine of $totalLines ($percent%)" -ForegroundColor Gray
+        }
     }
 
     # Handle code blocks
     if ($line -match '^```') {
         if ($inCodeBlock) {
             if ($codeLines.Count -gt 0 -and (Test-IsDiagram ($codeLines -join "`n"))) {
-                Add-DiagramBox -lines $codeLines -sel $selection -document $doc
+                Add-DiagramBox -lines $codeLines -sel $selection -document $doc -bgColor $CodeBlockBgColor -borderColor $DiagramBorderColor
             } else {
                 $selection.Font.Name = "Consolas"
                 $selection.Font.Size = 9
                 $selection.ParagraphFormat.LeftIndent = 36
-                $selection.ParagraphFormat.Shading.BackgroundPatternColor = 15790320
+                $selection.ParagraphFormat.Shading.BackgroundPatternColor = $CodeBlockBgColor
                 foreach ($codeLine in $codeLines) {
                     $selection.TypeText($codeLine)
                     $selection.TypeParagraph()
@@ -130,12 +210,61 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
         continue
     }
 
+    # Handle horizontal rules
+    if ($line -match '^(---|___|[*][*][*])$') {
+        $selection.Style = "Normal"
+        $selection.TypeParagraph()
+        $shape = $selection.InlineShapes.AddHorizontalLineStandard()
+        $selection.TypeParagraph()
+    }
+    # Handle images
+    elseif ($line -match '^\!\[(.+?)\]\((.+?)\)$') {
+        $altText = $matches[1]
+        $imagePath = $matches[2]
+
+        # Resolve relative paths
+        $baseDir = Split-Path $MarkdownPath -Parent
+        if (-not [System.IO.Path]::IsPathRooted($imagePath)) {
+            $imagePath = Join-Path $baseDir $imagePath
+        }
+
+        if (Test-Path $imagePath) {
+            try {
+                $shape = $selection.InlineShapes.AddPicture($imagePath)
+                $shape.LockAspectRatio = $true
+                if ($shape.Width -gt 400) {
+                    $shape.Width = 400  # Max width
+                }
+                $selection.TypeParagraph()
+            } catch {
+                # Fallback: insert alt text if image fails
+                $selection.TypeText("[$altText]")
+                $selection.TypeParagraph()
+            }
+        } else {
+            # Image not found: insert alt text
+            $selection.TypeText("[$altText - Image not found: $imagePath]")
+            $selection.TypeParagraph()
+        }
+    }
+    # Handle blockquotes
+    elseif ($line -match '^> (.+)$') {
+        $selection.Style = "Normal"
+        $selection.Font.Italic = $true
+        $selection.ParagraphFormat.LeftIndent = 36
+        $selection.ParagraphFormat.Shading.BackgroundPatternColor = $CodeBlockBgColor
+        Add-FormattedText -text $matches[1] -sel $selection -document $doc
+        $selection.TypeParagraph()
+        $selection.Font.Italic = $false
+        $selection.ParagraphFormat.LeftIndent = 0
+        $selection.ParagraphFormat.Shading.BackgroundPatternColor = 16777215
+    }
     # Handle headings
-    if ($line -match '^# (.+)$') {
+    elseif ($line -match '^# (.+)$') {
         $selection.Style = "Title"
         $selection.Font.Size = 26
         $selection.Font.Bold = $true
-        $selection.Font.Color = 49407
+        $selection.Font.Color = $HeadingColor
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
         $selection.TypeParagraph()
@@ -143,7 +272,7 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
     elseif ($line -match '^## (.+)$') {
         $selection.Style = "Heading 1"
         $selection.Font.Size = 16
-        $selection.Font.Color = 49407
+        $selection.Font.Color = $HeadingColor
         $selection.TypeText($matches[1])
         $selection.TypeParagraph()
     }
@@ -173,31 +302,49 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
 
         $rows = $tableData | Where-Object { $_ -notmatch '^\|[-\s|:]+\|$' }
         if ($rows.Count -gt 0) {
-            $firstRow = $rows[0] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
-            $numCols = $firstRow.Count
-            $numRows = $rows.Count
+            try {
+                $firstRow = $rows[0] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
+                $numCols = $firstRow.Count
+                $numRows = $rows.Count
 
-            $range = $selection.Range
-            $table = $doc.Tables.Add($range, $numRows, $numCols)
-            $table.Borders.Enable = $true
-            $table.Style = "Grid Table 4 - Accent 1"
-            $table.AutoFitBehavior(2)
+                $range = $selection.Range
+                $table = $doc.Tables.Add($range, $numRows, $numCols)
+                $table.Borders.Enable = $true
+                $table.Style = $TableStyle
+                $table.AutoFitBehavior(2)
 
-            for ($r = 0; $r -lt $rows.Count; $r++) {
-                $cells = $rows[$r] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
-                for ($c = 0; $c -lt [Math]::Min($cells.Count, $numCols); $c++) {
-                    $cellText = $cells[$c] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
-                    $table.Cell($r + 1, $c + 1).Range.Text = $cellText
+                for ($r = 0; $r -lt $rows.Count; $r++) {
+                    $cells = $rows[$r] -split '\|' | Where-Object { $_.Trim() -ne '' } | ForEach-Object { $_.Trim() }
+                    for ($c = 0; $c -lt [Math]::Min($cells.Count, $numCols); $c++) {
+                        $cellText = $cells[$c]
+                        $cellRange = $table.Cell($r + 1, $c + 1).Range
 
-                    if ($r -eq 0) {
-                        $table.Cell($r + 1, $c + 1).Range.Font.Bold = $true
-                        $table.Cell($r + 1, $c + 1).Shading.BackgroundPatternColor = 14083324
+                        # Clear cell first
+                        $cellRange.Text = ""
+
+                        # Position selection at cell start
+                        $cellRange.Collapse(1)  # Collapse to start
+                        $selection.SetRange($cellRange.Start, $cellRange.Start)
+
+                        # Add formatted text (handles links, bold, code)
+                        Add-FormattedText -text $cellText -sel $selection -document $doc
+
+                        # Apply header formatting
+                        if ($r -eq 0) {
+                            $table.Cell($r + 1, $c + 1).Range.Font.Bold = $true
+                            $table.Cell($r + 1, $c + 1).Shading.BackgroundPatternColor = $TableHeaderBgColor
+                        }
                     }
                 }
-            }
 
-            $selection.EndKey(6)
-            $selection.TypeParagraph()
+                $selection.EndKey(6)
+                $selection.TypeParagraph()
+            } catch {
+                if ($VerboseOutput) {
+                    Write-Host "WARNING: Failed to process table: $_" -ForegroundColor Yellow
+                }
+                # Continue processing rest of document
+            }
         }
         $tableData = @()
 
@@ -208,67 +355,19 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
     # Handle bullet lists
     elseif ($line -match '^- (.+)$') {
         $selection.Style = "List Bullet"
-        $text = $matches[1] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
-        $selection.TypeText($text)
+        Add-FormattedText -text $matches[1] -sel $selection -document $doc
         $selection.TypeParagraph()
     }
     # Handle numbered lists
     elseif ($line -match '^\d+\. (.+)$') {
         $selection.Style = "List Number"
-        $text = $matches[1] -replace '\*\*(.+?)\*\*', '$1' -replace '`(.+?)`', '$1'
-        $selection.TypeText($text)
+        Add-FormattedText -text $matches[1] -sel $selection -document $doc
         $selection.TypeParagraph()
     }
-    # Handle links
-    elseif ($line -match '\[.+?\]\(.+?\)') {
+    # Handle text with formatting (links, bold, code, or mixed)
+    elseif ($line -match '(\[.+?\]\(.+?\)|\*\*.+?\*\*|`.+?`)') {
         $selection.Style = "Normal"
-        $currentLine = $line
-
-        while ($currentLine -match '\[(.+?)\]\((.+?)\)') {
-            $beforeLink = $currentLine.Substring(0, $currentLine.IndexOf('['))
-            if ($beforeLink) { $selection.TypeText($beforeLink) }
-
-            $linkText = $matches[1]
-            $linkUrl = $matches[2]
-
-            $hyperlink = $doc.Hyperlinks.Add($selection.Range, $linkUrl, $null, $null, $linkText)
-
-            $currentLine = $currentLine.Substring($currentLine.IndexOf(')') + 1)
-        }
-
-        if ($currentLine) { $selection.TypeText($currentLine) }
-        $selection.TypeParagraph()
-    }
-    # Handle bold text
-    elseif ($line -match '\*\*') {
-        $selection.Style = "Normal"
-        $parts = $line -split '\*\*'
-        for ($p = 0; $p -lt $parts.Count; $p++) {
-            if ($p % 2 -eq 1) {
-                $selection.Font.Bold = $true
-                $selection.TypeText($parts[$p])
-                $selection.Font.Bold = $false
-            } else {
-                $selection.TypeText($parts[$p])
-            }
-        }
-        $selection.TypeParagraph()
-    }
-    # Handle inline code
-    elseif ($line -match '`') {
-        $selection.Style = "Normal"
-        $parts = $line -split '`'
-        for ($p = 0; $p -lt $parts.Count; $p++) {
-            if ($p % 2 -eq 1) {
-                $selection.Font.Name = "Consolas"
-                $selection.Font.Size = 10
-                $selection.TypeText($parts[$p])
-                $selection.Font.Name = "Calibri"
-                $selection.Font.Size = 11
-            } else {
-                $selection.TypeText($parts[$p])
-            }
-        }
+        Add-FormattedText -text $line -sel $selection -document $doc
         $selection.TypeParagraph()
     }
     # Handle empty lines
@@ -277,10 +376,14 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
             $selection.Style = "Normal"
         }
     }
-    # Normal text
+    # Normal text (may contain formatting that wasn't caught by previous checks)
     else {
         $selection.Style = "Normal"
-        $selection.TypeText($line)
+        if ($line -match '(\[.+?\]\(.+?\)|\*\*.+?\*\*|`.+?`)') {
+            Add-FormattedText -text $line -sel $selection -document $doc
+        } else {
+            $selection.TypeText($line)
+        }
         $selection.TypeParagraph()
     }
 }
@@ -289,12 +392,20 @@ Write-Progress -Activity "Converting to Word" -Completed
 
 # Save and close
 try {
-    if (Test-Path $WordPath) {
-        Remove-Item $WordPath -Force
+    # Convert to absolute path
+    $absPath = (Resolve-Path -Path (Split-Path $WordPath -Parent)).Path + "\" + (Split-Path $WordPath -Leaf)
+
+    if (Test-Path $absPath) {
+        Remove-Item $absPath -Force
     }
 
-    $doc.SaveAs([ref]$WordPath, [ref]16)
-    Write-Host "[OK] Word document created successfully!" -ForegroundColor Green
+    $doc.SaveAs([ref]$absPath, [ref]16)
+    if (-not $Quiet) {
+        Write-Host "[OK] Word document created successfully!" -ForegroundColor Green
+        if ($VerboseOutput) {
+            Write-Host "Saved to: $absPath" -ForegroundColor Gray
+        }
+    }
 } catch {
     Write-Host "ERROR: Failed to save document: $_" -ForegroundColor Red
     exit 1
@@ -304,4 +415,6 @@ try {
     [System.Runtime.Interopservices.Marshal]::ReleaseComObject($word) | Out-Null
 }
 
-Write-Host "Conversion complete!" -ForegroundColor Green
+if (-not $Quiet) {
+    Write-Host "Conversion complete!" -ForegroundColor Green
+}
