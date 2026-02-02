@@ -1,0 +1,26 @@
+{
+  "name": "generate-spec",
+  "version": "1.0.0",
+  "description": "Generate a comprehensive specification document by gathering information from WorkIQ and formatting according to Microsoft standards",
+  "author": "Saurabh Agarwal",
+  "usage": "/generate-spec <topic>",
+  "examples": [
+    "/generate-spec folder affinity",
+    "/generate-spec voicemail support",
+    "/generate-spec shared mailbox search"
+  ],
+  "parameters": {
+    "topic": {
+      "type": "string",
+      "required": true,
+      "description": "The topic to research and create a specification for"
+    },
+    "output_format": {
+      "type": "string",
+      "required": false,
+      "default": "docx",
+      "options": ["md", "docx", "both"],
+      "description": "Output format: markdown, Word document, or both"
+    }
+  }
+}

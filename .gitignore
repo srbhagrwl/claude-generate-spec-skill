@@ -1,0 +1,36 @@
+﻿# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows image file caches
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Temp files
+*.tmp
+~$*
+*.bak
+
+# Logs
+*.log
+
+# Test output
+test-output/
+*.docx.tmp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# PowerShell profile
+Microsoft.PowerShell_profile.ps1
