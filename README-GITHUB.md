@@ -4,7 +4,7 @@
 
 **Time Savings:** 8-12 hours of manual work → 5 minutes automated ⚡
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/releases)
+[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/srbhagrwl/claude-generate-spec-skill/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Features
@@ -24,7 +24,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR-USERNAME/claude-generate-spec-skill.git
+git clone https://github.com/srbhagrwl/claude-generate-spec-skill.git
 
 # Copy to Claude skills directory (Windows)
 cd claude-generate-spec-skill
@@ -33,7 +33,7 @@ xcopy /E /I /Y . "%USERPROFILE%\.claude\skills\generate-spec\"
 
 ### Manual Install
 
-1. Download the [latest release](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/releases/latest)
+1. Download the [latest release](https://github.com/srbhagrwl/claude-generate-spec-skill/releases/latest)
 2. Extract to: `C:\Users\<YourName>\.claude\skills\generate-spec\`
 3. Verify in Claude Code CLI: `/help` should list `generate-spec`
 
@@ -293,7 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Saurabh Agarwal**
 
-- GitHub: [@YOUR-USERNAME](https://github.com/YOUR-USERNAME)
+- GitHub: [@srbhagrwl](https://github.com/srbhagrwl)
 - Email: sauagarwal@microsoft.com
 
 ## 🙏 Acknowledgments
@@ -310,4 +310,4 @@ If this skill saves you time, consider giving it a star! ⭐
 
 **Status:** Production Ready ✅ | **Package Size:** 21 KB | **Platform:** Windows
 
-[Report Bug](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/issues) · [Request Feature](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/issues) · [Documentation](https://github.com/YOUR-USERNAME/claude-generate-spec-skill/wiki)
+[Report Bug](https://github.com/srbhagrwl/claude-generate-spec-skill/issues) · [Request Feature](https://github.com/srbhagrwl/claude-generate-spec-skill/issues) · [Documentation](https://github.com/srbhagrwl/claude-generate-spec-skill/wiki)
