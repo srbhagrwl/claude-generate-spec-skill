@@ -30,62 +30,77 @@ When this skill is invoked with a topic, you will:
 
 ### Phase 1: Information Gathering (Deep Research with UltraThink)
 
-**CRITICAL: Use UltraThink Mode - Multiple Targeted Queries + Full Artifact Analysis**
+**CRITICAL: Use UltraThink Mode - Sequential Targeted Queries + Full Artifact Analysis**
 
-Instead of a single query, make **multiple targeted WorkIQ calls** to gather ALL relevant information. Fetch **complete artifacts** (full documents, entire emails, complete meeting notes) rather than summaries.
+⚠️ **IMPORTANT: Execute queries ONE AT A TIME to prevent cascading failures**
+
+Instead of a single query, make **7 sequential targeted WorkIQ calls** to gather ALL relevant information. Fetch **complete artifacts** (full documents, entire emails, complete meeting notes) rather than summaries.
+
+**Why sequential execution matters:**
+- Parallel tool calls can cause "sibling tool call errored" cascading failures
+- One query failure should NOT block remaining queries
+- Sequential execution allows graceful degradation (continue with available data)
+- Each query result informs the next query's context
 
 **Step 1: Make Multiple Targeted WorkIQ Queries**
 
-Execute these queries **sequentially**, analyzing results before proceeding:
+**CRITICAL EXECUTION RULES:**
+- Execute queries **ONE AT A TIME** - NEVER make parallel tool calls
+- Wait for each query result before starting the next query
+- Brief analysis after each query result (2-3 sentences on what you found)
+- If a query fails, retry once, then continue to next query
+- Do NOT let one failure stop remaining queries
+
+**Query Sequence (execute one query per message):**
 
 1. **Query 1: Emails about the topic**
    ```
    WorkIQ: Find all emails discussing [topic]. Include full email content, not summaries.
    ```
-   - Retrieve complete email threads
+   - After receiving results: Note count, key stakeholders mentioned, major themes
    - Extract: stakeholder names, decisions, open questions, timelines
 
 2. **Query 2: Meetings and meeting notes**
    ```
    WorkIQ: Find all meetings and meeting notes related to [topic]. Include complete meeting transcripts and notes.
    ```
-   - Get full meeting transcripts/notes, not summaries
+   - After receiving results: Note count, key meetings, decision points
    - Extract: decisions made, action items, attendees, discussions
 
 3. **Query 3: Specification documents and design docs**
    ```
    WorkIQ: Find all specification documents, design docs, and technical proposals for [topic]. Retrieve full document content.
    ```
-   - Fetch complete documents, not excerpts
+   - After receiving results: Note document count, maturity level, key proposals
    - Extract: technical architecture, requirements, scope decisions
 
 4. **Query 4: Teams conversations**
    ```
    WorkIQ: Find all Teams conversations and threads discussing [topic]. Include complete conversation history.
    ```
-   - Get full conversation threads with all messages
+   - After receiving results: Note conversation count, key concerns raised
    - Extract: informal decisions, concerns, feedback
 
 5. **Query 5: Customer feedback and incidents**
    ```
    WorkIQ: Find customer escalations, incidents, and feedback related to [topic]. Include complete incident details.
    ```
-   - Retrieve full incident reports, customer names, numbers
+   - After receiving results: Note incident count, severity, customer names
    - Extract: evidence, pain points, frequency
 
 6. **Query 6: Project tracking and timelines**
    ```
    WorkIQ: Find project plans, work items, and timeline discussions for [topic]. Include complete work item details.
    ```
-   - Get full work item descriptions, dependencies, ETAs
+   - After receiving results: Note work item count, timeline status, blockers
    - Extract: phases, tasks, DRIs, critical path
 
 7. **Query 7: Related artifacts (if needed)**
    ```
    WorkIQ: Find any additional documents, presentations, or artifacts related to [topic that weren't found in previous queries].
    ```
+   - After receiving results: Note artifact count, types found
    - Catch anything missed in earlier queries
-   - Look for presentations, diagrams, spreadsheets
 
 **Step 2: UltraThink - Deep Analysis Phase**
 
@@ -111,11 +126,16 @@ After gathering all artifacts, **think deeply** about the complete dataset:
 - Validate technical feasibility from multiple perspectives
 - Prioritize based on frequency and emphasis across sources
 
-**Retry Logic for Each Query:**
-- If any WorkIQ query fails, **automatically retry once** after 2-3 seconds
-- Notify user: `⚠️ Query [N] failed - retrying once...`
-- If retry fails, note which query failed but continue with remaining queries
-- Only fall back to template mode if ALL queries fail
+**Error Handling and Retry Logic:**
+- **If a query fails:** Immediately retry once with the same query
+- **Notify user:** `⚠️ Query [N] failed - retrying once...`
+- **If retry succeeds:** Continue normally to next query
+- **If retry fails:**
+  - Note which query failed: `✗ Query [N] unavailable - continuing with remaining queries`
+  - **IMPORTANT:** Continue to next query - do NOT stop the entire process
+  - Mark gaps in final spec's "Open Questions" section
+- **Only fall back to template mode if:** First 3 queries ALL fail (emails, meetings, docs)
+- **Graceful degradation:** If you get 4+ successful queries out of 7, proceed with available data
 
 **Key Questions to Answer (from complete artifacts):**
 - What is the problem being solved? (exact quotes from stakeholders)
@@ -243,29 +263,38 @@ Provide the user with:
 ```
 📋 Generating specification for: {TOPIC}
 
-🔍 Phase 1: Information Gathering (UltraThink Mode - Multiple Queries)
+🔍 Phase 1: Information Gathering (UltraThink Mode - Sequential Queries)
+   Note: Executing queries ONE AT A TIME to prevent failures
+
    → Query 1/7: Searching emails...
    ✓ Found X emails (retrieved full content)
+   📊 Brief analysis: Found Y stakeholders, Z key threads about [main themes]
 
    → Query 2/7: Searching meetings...
    ✓ Found X meetings (retrieved complete notes)
+   📊 Brief analysis: Key decisions on [dates], attendees include [names]
 
    → Query 3/7: Searching specification documents...
    ✓ Found X documents (retrieved full content)
+   📊 Brief analysis: Found [mature/draft] specs covering [scope areas]
 
    → Query 4/7: Searching Teams conversations...
    ✓ Found X conversations (retrieved complete threads)
+   📊 Brief analysis: Main concerns are [topics], key contributors [names]
 
    → Query 5/7: Searching customer incidents...
    ✓ Found X escalations (retrieved full incident details)
+   📊 Brief analysis: P0/P1/P2 breakdown, top customers affected
 
    → Query 6/7: Searching project plans...
    ✓ Found X work items (retrieved complete details)
+   📊 Brief analysis: Timeline status [on track/delayed], blockers identified
 
    → Query 7/7: Searching related artifacts...
    ✓ Found X additional artifacts
+   📊 Brief analysis: Found [presentations/diagrams] with [content summary]
 
-   🧠 UltraThink: Analyzing X total artifacts...
+   🧠 UltraThink: Deep analysis across X total artifacts...
    ✓ Cross-referenced X sources
    ✓ Identified X stakeholders with roles
    ✓ Found X key decisions with dates
@@ -302,31 +331,45 @@ Next Steps:
 ```
 📋 Generating specification for: {TOPIC}
 
-🔍 Phase 1: Information Gathering (UltraThink Mode - Multiple Queries)
+🔍 Phase 1: Information Gathering (UltraThink Mode - Sequential Queries)
+   Note: Executing queries ONE AT A TIME to prevent cascading failures
+
    → Query 1/7: Searching emails...
    ✓ Found X emails (retrieved full content)
+   📊 Brief analysis: Found Y stakeholders, Z key threads
 
    → Query 2/7: Searching meetings...
    ⚠️ Query timeout - retrying once...
    ✓ Retry successful! Found X meetings
+   📊 Brief analysis: Key decisions recovered from meeting notes
 
    → Query 3/7: Searching specification documents...
    ✓ Found X documents (retrieved full content)
+   📊 Brief analysis: Found mature specs covering main areas
 
    → Query 4/7: Searching Teams conversations...
    ⚠️ Query failed - retrying once...
    ✗ Retry failed (Teams query unavailable)
-   ℹ️ Continuing with available data...
+   ℹ️ Continuing with remaining queries (not blocking progress)
 
    → Query 5/7: Searching customer incidents...
    ✓ Found X escalations (retrieved full incident details)
+   📊 Brief analysis: P0/P1 incidents identified with customer names
 
-   [continues with remaining queries...]
+   → Query 6/7: Searching project plans...
+   ✓ Found X work items (retrieved complete details)
+   📊 Brief analysis: Timeline and dependencies mapped
 
-   🧠 UltraThink: Analyzing available artifacts...
-   ℹ️ Note: Teams conversations unavailable - marked gaps in Open Questions
-   ✓ Cross-referenced X sources
-   ✓ Analysis complete with X/7 query sources
+   → Query 7/7: Searching related artifacts...
+   ✓ Found X additional artifacts
+   📊 Brief analysis: Supporting materials identified
+
+   🧠 UltraThink: Deep analysis across available artifacts...
+   ℹ️ Note: Teams data unavailable - marked in Open Questions section
+   ✓ Cross-referenced 6 successful query sources
+   ✓ Identified X stakeholders with roles
+   ✓ Found X key decisions with dates
+   ✓ Graceful degradation: Proceeding with 6/7 data sources
 
 📝 Phase 2: Document Generation
    [continues normally with note about missing Teams data...]
@@ -336,23 +379,38 @@ Next Steps:
 ```
 📋 Generating specification for: {TOPIC}
 
-🔍 Phase 1: Information Gathering (UltraThink Mode - Multiple Queries)
+🔍 Phase 1: Information Gathering (UltraThink Mode - Sequential Queries)
+   Note: Executing queries ONE AT A TIME
+
    → Query 1/7: Searching emails...
    ⚠️ WorkIQ unavailable - retrying once...
    ✗ Retry failed
 
    → Query 2/7: Searching meetings...
-   ✗ WorkIQ unavailable
+   ⚠️ WorkIQ unavailable - retrying once...
+   ✗ Retry failed
 
-   [All queries fail...]
+   → Query 3/7: Searching specification documents...
+   ⚠️ WorkIQ unavailable - retrying once...
+   ✗ Retry failed
 
-   ⚠️ WorkIQ unavailable or all queries failed
-   ⚠️ Falling back to template mode
+   ⚠️ First 3 critical queries failed
+   ⚠️ Falling back to template mode (graceful degradation)
 
 📝 Phase 2: Template Generation
    ✓ Created template specification with all required sections
-   ✓ [TO BE FILLED] markers added for manual completion
-   [continues with template mode...]
+   ✓ [TO BE FILLED] markers added (34 placeholders)
+   ✓ Structure follows Microsoft standards
+   ✓ Ready for manual completion
+   ✓ Saved: ./{Topic} - Specification.md
+
+📄 Phase 3: Word Conversion
+   ✓ Converted template to Word format
+   ✓ Saved: ./{Topic} - Specification.docx
+
+ℹ️ Template Mode Active
+   Fill in [TO BE FILLED] markers with your information
+   Still saves 6-8 hours vs. starting from scratch
 ```
 
 ## Quality Checklist
